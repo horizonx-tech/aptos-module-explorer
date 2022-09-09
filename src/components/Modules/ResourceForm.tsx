@@ -1,0 +1,67 @@
+import { AptosClient } from 'aptos'
+import { MoveResource, MoveStruct } from 'aptos/dist/generated'
+import { FC, useRef, useState } from 'react'
+import { shortenInnerAddress } from 'src/utils/address'
+import { Code } from '../common'
+import { InputRow, InputWrapper } from './common'
+
+type ResourceFormProps = {
+  moduleId: string
+  resource: MoveStruct
+  getAccountResources: AptosClient['getAccountResources'] | undefined
+}
+export const ResourceForm: FC<ResourceFormProps> = ({
+  moduleId,
+  resource: { name, fields },
+  getAccountResources,
+}) => {
+  const [resources, setResources] = useState<MoveResource[]>()
+  const [error, setError] = useState<any>()
+  const ref = useRef<HTMLInputElement>(null)
+  return (
+    <div key={name}>
+      <h4>{name}</h4>
+      <div>
+        <InputWrapper label="account">
+          <InputRow>
+            <input ref={ref} />
+            <button
+              onClick={async () => {
+                setResources(undefined)
+                setError(undefined)
+                try {
+                  const resources = await getAccountResources!(
+                    ref.current?.value || '',
+                  )
+                  const regex = new RegExp(`^${moduleId}::${name}(<|$)`)
+                  setResources(
+                    resources
+                      .filter(({ type }) => regex.test(type))
+                      .map(({ type, ...values }) => ({
+                        type: shortenInnerAddress(type),
+                        ...values,
+                      })),
+                  )
+                } catch (e) {
+                  setError(e)
+                }
+              }}
+              disabled={!getAccountResources}
+            >
+              Call
+            </button>
+          </InputRow>
+        </InputWrapper>
+      </div>
+      <Code>
+        {error || resources
+          ? JSON.stringify(error || resources, null, 2)
+          : fields.map(({ name, type }) => (
+              <div key={name}>
+                {name}: <span>{type}</span>
+              </div>
+            ))}
+      </Code>
+    </div>
+  )
+}
