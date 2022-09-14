@@ -1,4 +1,4 @@
-import { MoveModule } from 'aptos/dist/generated'
+import { Types } from 'aptos'
 import { FC, useState } from 'react'
 import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useSettings } from 'src/hooks/useSettings'
@@ -11,7 +11,7 @@ import { FunctionForm } from './FunctionForm'
 import { ResourceForm } from './ResourceForm'
 
 type ModulesProps = {
-  modules: MoveModule[]
+  modules: Types.MoveModule[]
 }
 export const Modules: FC<ModulesProps> = ({ modules }) => {
   const { signer } = useWallet()

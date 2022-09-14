@@ -1,5 +1,4 @@
-import { AptosClient } from 'aptos'
-import { Event } from 'aptos/dist/generated'
+import { AptosClient, Types } from 'aptos'
 import { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { Code } from '../common'
@@ -23,7 +22,7 @@ export const EventsForm: FC<EventsFormProps> = ({
   event: { eventHandle, fieldName },
   getEventsByEventHandle,
 }) => {
-  const [events, setEvents] = useState<Event[]>()
+  const [events, setEvents] = useState<Types.Event[]>()
   const [error, setError] = useState<any>()
   const methods = useForm<FormData>()
   return (

@@ -1,4 +1,4 @@
-import { MoveModule, MoveResource } from 'aptos/dist/generated'
+import { Types } from 'aptos'
 import type { NextPage } from 'next'
 import { useCallback, useEffect, useState } from 'react'
 import { Modules } from 'src/components/Modules'
@@ -15,9 +15,9 @@ const Home: NextPage = () => {
   } = useSettings()
   const { client } = useAptosClient()
 
-  const [modules, setModules] = useState<MoveModule[]>([])
+  const [modules, setModules] = useState<Types.MoveModule[]>([])
   const [isModulesLoading, setIsModulesLoading] = useState(false)
-  const [resources, setResources] = useState<MoveResource[]>([])
+  const [resources, setResources] = useState<Types.MoveResource[]>([])
 
   const refreshModules = useCallback(async () => {
     if (!client || !account) return

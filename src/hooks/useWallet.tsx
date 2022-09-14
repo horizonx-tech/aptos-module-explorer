@@ -8,7 +8,6 @@ import {
   useState,
 } from 'react'
 import { WALLET_URLS } from 'src/constants'
-import { CoinModuleFactory } from '__generated__/CoinModuleFactory'
 
 export const useWallet = () => useContext(WalletContext)
 

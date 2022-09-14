@@ -1,5 +1,4 @@
-import { AptosClient } from 'aptos'
-import { MoveResource, MoveStruct } from 'aptos/dist/generated'
+import { AptosClient, Types } from 'aptos'
 import { FC, useRef, useState } from 'react'
 import { shortenInnerAddress } from 'src/utils/address'
 import { Code } from '../common'
@@ -7,7 +6,7 @@ import { InputRow, InputWrapper } from './common'
 
 type ResourceFormProps = {
   moduleId: string
-  resource: MoveStruct
+  resource: Types.MoveStruct
   getAccountResources: AptosClient['getAccountResources'] | undefined
 }
 export const ResourceForm: FC<ResourceFormProps> = ({
@@ -15,7 +14,7 @@ export const ResourceForm: FC<ResourceFormProps> = ({
   resource: { name, fields },
   getAccountResources,
 }) => {
-  const [resources, setResources] = useState<MoveResource[]>()
+  const [resources, setResources] = useState<Types.MoveResource[]>()
   const [error, setError] = useState<any>()
   const ref = useRef<HTMLInputElement>(null)
   return (

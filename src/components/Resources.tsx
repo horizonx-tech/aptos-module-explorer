@@ -1,10 +1,10 @@
-import { MoveResource } from 'aptos/dist/generated'
+import { Types } from 'aptos'
 import { FC, useMemo, useState } from 'react'
 import { shortenInnerAddress } from 'src/utils/address'
 import { Code, Control, Section } from './common'
 
 export const Resources: FC<{
-  resources: MoveResource[]
+  resources: Types.MoveResource[]
   refresh: () => Promise<any>
 }> = (props) => {
   const items = useMemo(() => categorize(props.resources), [props.resources])
@@ -46,7 +46,7 @@ export const Resources: FC<{
   )
 }
 
-const StructResources: FC<{ name: string; resources: MoveResource[] }> = ({
+const StructResources: FC<{ name: string; resources: Types.MoveResource[] }> = ({
   name,
   resources,
 }) => {
@@ -79,9 +79,9 @@ const StructResources: FC<{ name: string; resources: MoveResource[] }> = ({
   )
 }
 
-type CategorizedResources = Record<string, Record<string, MoveResource[]>>
+type CategorizedResources = Record<string, Record<string, Types.MoveResource[]>>
 
-const categorize = (resources: MoveResource[]) =>
+const categorize = (resources: Types.MoveResource[]) =>
   resources.reduce<CategorizedResources>((res, resource) => {
     const structId = resource.type.replace(/(^.*?)(?:<.*|$)/, '$1')
     const [address, moduleName, structName] = structId.split('::')

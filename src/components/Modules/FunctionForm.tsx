@@ -1,4 +1,4 @@
-import { MoveFunction } from 'aptos/dist/generated'
+import { Types } from 'aptos'
 import { FC, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { convert } from 'src/utils/converter'
@@ -12,7 +12,7 @@ export type FormData = {
 }
 
 type FunctionFormProps = {
-  fn: MoveFunction
+  fn: Types.MoveFunction
   onSubmit?: (data: FormData) => Promise<any>
 }
 export const FunctionForm: FC<FunctionFormProps> = ({
