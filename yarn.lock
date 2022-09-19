@@ -169,29 +169,29 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
-"@horizonx/aptos-codegen@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@horizonx/aptos-codegen/-/aptos-codegen-0.0.1.tgz#9f09d366756aed556d9c16d773de1de2073e00ce"
-  integrity sha512-jBgKg5WF+1vnbNRnLNwI6UGaBlPnQNkgo3oI3zmj56Hs50n+Np+DnYEtKcleZdVUTeki/l4tcK7bGk2S8fVtFA==
+"@horizonx/aptos-codegen@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@horizonx/aptos-codegen/-/aptos-codegen-0.4.0.tgz#f29881a6cbf84f5e41ac0456103247ddb4ac3211"
+  integrity sha512-acBNN/FTm/dqPITZ44Fsws/8HApEdrokb/yjClI34vUJmQIXmJqEpCbClaJdGpvqBFhTlF0mfr80BLP00z/66Q==
   dependencies:
-    "@horizonx/aptos-module-client" "^0.0.1"
+    "@horizonx/aptos-module-client" "^0.1.0"
     aptos "^1.3.7"
     change-case "^4.1.2"
     glob "^8.0.3"
     yargs "^17.5.1"
 
-"@horizonx/aptos-module-client@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@horizonx/aptos-module-client/-/aptos-module-client-0.0.1.tgz#67dc30398454e3f31dae85daacb46009fb9d2585"
-  integrity sha512-emZ7aNlCmaqeV6/wcqfBmGhXvaTfIhh9m++yZD0OPICzqsms6Q6AdDLlwPwWygRahNfppo4t6YxvVUiU6yMvXg==
+"@horizonx/aptos-module-client@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@horizonx/aptos-module-client/-/aptos-module-client-0.1.0.tgz#42287278c0004ee8be57929898d0e70247112675"
+  integrity sha512-x50X+eIlD/Pn7K9ai0VV56oB4NKckoQsviFhKCbamdbr8alBYDje9SKXKEDUPyPJDO14I+16mQZDHn4OkzIxbQ==
   dependencies:
     aptos "^1.3.7"
     change-case "^4.1.2"
 
-"@horizonx/aptos-wallet-connector@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@horizonx/aptos-wallet-connector/-/aptos-wallet-connector-0.0.1.tgz#f7fe1ef18726c8f32f27a58fa4e69a2afe90d3ad"
-  integrity sha512-2gswFmT8m6TwDuM35ug0ZITDGZ7qgEwnyftrIJb4b7/jilRJEBM1evk+0po2RpZGu0sy/Eq4PlwNTwHKcBqBNQ==
+"@horizonx/aptos-wallet-connector@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@horizonx/aptos-wallet-connector/-/aptos-wallet-connector-0.2.0.tgz#d5bb4470f171e29fbab31bab76095ef6d24fd07c"
+  integrity sha512-JxovnDyw8tuiZCwQ4lopESPDb5lBkTkjd0Ywuph1TONejPbaW5oEEtSbmvG2Dp93FmrmZPYBHDKRuobuszbYYA==
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
