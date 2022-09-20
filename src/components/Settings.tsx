@@ -1,7 +1,7 @@
 import { SUPPORTED_WALLETS } from '@horizonx/aptos-wallet-connector'
 import { FC } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { PUBLIC_DEV_NODE_URLS } from 'src/constants'
+import { PUBLIC_NODE_URLS } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
 import { useWallet } from 'src/hooks/useWallet'
 import styled from 'styled-components'
@@ -40,7 +40,7 @@ export const Settings: FC = () => {
           <div>
             <input {...methods.register('nodeUrl')} list="node-urls" />
             <datalist id="node-urls">
-              {PUBLIC_DEV_NODE_URLS.map((url) => (
+              {PUBLIC_NODE_URLS.map((url) => (
                 <option key={url} value={url} />
               ))}
             </datalist>
