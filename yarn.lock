@@ -188,10 +188,18 @@
     aptos "^1.3.7"
     change-case "^4.1.2"
 
-"@horizonx/aptos-wallet-connector@^0.2.0":
+"@horizonx/aptos-module-client@^0.2.0":
   version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@horizonx/aptos-wallet-connector/-/aptos-wallet-connector-0.2.0.tgz#d5bb4470f171e29fbab31bab76095ef6d24fd07c"
-  integrity sha512-JxovnDyw8tuiZCwQ4lopESPDb5lBkTkjd0Ywuph1TONejPbaW5oEEtSbmvG2Dp93FmrmZPYBHDKRuobuszbYYA==
+  resolved "https://registry.yarnpkg.com/@horizonx/aptos-module-client/-/aptos-module-client-0.2.0.tgz#f13f5ce39c94f52514b78bbc50706a9786db5628"
+  integrity sha512-6dKq+xM5eInYefU516v20Lw4Kbj6kendUsYAZNeaPJzNpHhpohuLNMmtdMW6HdAECKUXjnK/AgH8ZIOKEYzPlg==
+  dependencies:
+    aptos "^1.3.7"
+    change-case "^4.1.2"
+
+"@horizonx/aptos-wallet-connector@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@horizonx/aptos-wallet-connector/-/aptos-wallet-connector-0.3.1.tgz#2ad53f41559ad72b39a93d5d25a0d49bf10506b0"
+  integrity sha512-8YmXB0QB4pFiGfsUQpS2JURxvPp8g9TegTO4Bihs3f1DanAFANnwj4fmwmDsq02UWl4Z9ye9N5ZUw/MVO8Y1/A==
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
