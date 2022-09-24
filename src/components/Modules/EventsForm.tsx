@@ -27,7 +27,7 @@ export const EventsForm: FC<EventsFormProps> = ({
   const methods = useForm<FormData>()
   return (
     <FormContainer>
-      <h4>{fieldName}</h4>
+      <h3>{fieldName}</h3>
       <FormProvider {...methods}>
         <form
           onSubmit={methods.handleSubmit(async (data) => {

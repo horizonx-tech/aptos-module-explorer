@@ -2,7 +2,7 @@ import { AptosClient, Types } from 'aptos'
 import { FC, useRef, useState } from 'react'
 import { shortenInnerAddress } from 'src/utils/address'
 import { Code } from '../common'
-import { InputRow, InputWrapper } from './common'
+import { FormContainer, InputRow, InputWrapper } from './common'
 
 type ResourceFormProps = {
   moduleId: string
@@ -18,9 +18,9 @@ export const ResourceForm: FC<ResourceFormProps> = ({
   const [error, setError] = useState<any>()
   const ref = useRef<HTMLInputElement>(null)
   return (
-    <div key={name}>
-      <h4>{name}</h4>
-      <div>
+    <FormContainer>
+      <h3>{name}</h3>
+      <form>
         <InputWrapper label="account">
           <InputRow>
             <input ref={ref} />
@@ -51,7 +51,7 @@ export const ResourceForm: FC<ResourceFormProps> = ({
             </button>
           </InputRow>
         </InputWrapper>
-      </div>
+      </form>
       <Code>
         {error || resources
           ? JSON.stringify(error || resources, null, 2)
@@ -61,6 +61,6 @@ export const ResourceForm: FC<ResourceFormProps> = ({
               </div>
             ))}
       </Code>
-    </div>
+    </FormContainer>
   )
 }

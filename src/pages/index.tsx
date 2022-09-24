@@ -59,30 +59,18 @@ const Main = styled.main`
   width: 100%;
   max-width: 1200px;
   padding: 0 16px 240px;
-  margin: 64px auto;
+  margin: 120px auto;
 
   h1 {
-    font-size: 3em;
+    font-size: 48px;
     margin-bottom: 64px;
   }
   h2 {
-    font-size: 2em;
+    font-size: 20px;
     margin-top: 48px;
   }
   h3 {
-    font-size: 1.2em;
-  }
-  h4 {
-    font-size: 1.2em;
-  }
-
-  input {
-    border: 1px solid darkgray;
-  }
-
-  button {
-    background-color: gray;
-    padding: 6px 24px;
+    font-size: 16px;
   }
 `
 

@@ -1,4 +1,6 @@
 import { createGlobalStyle } from 'styled-components'
+import { cream, jetBlack, tiffany } from './colors'
+import { fontFamily, fontFamilyHeading, fontWeightRegular } from './fonts'
 
 export const GlobalStyles = createGlobalStyle`
   html {
@@ -7,14 +9,19 @@ export const GlobalStyles = createGlobalStyle`
   }
   body {
     height: 100%;
+    font-family: ${fontFamily};
     font-size: 16px;
+    font-weight: ${fontWeightRegular};
     line-height: 1.25;
-    background-color: darkslategrey;
-    color: whitesmoke;
+    background-color: ${jetBlack};
+    color: ${cream};
+    h1, h2 {
+      font-family: ${fontFamilyHeading};
+    }
     a, button {
       :enabled:hover,
       :enabled:focus {
-        color: coral;
+        color: ${tiffany};
       }
     }
     > div#__next {

@@ -1,11 +1,15 @@
 import { Types } from 'aptos'
+import SearchIcon from 'public/svgs/icon_search.svg'
 import { FC, useState } from 'react'
 import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useSettings } from 'src/hooks/useSettings'
+import { useToggle } from 'src/hooks/useToggle'
 import { useWallet } from 'src/hooks/useWallet'
 import { isEventHandle, isResource, notFalsy } from 'src/utils/filter'
 import styled from 'styled-components'
-import { Control, Section } from '../common'
+import { Control, InputDiv, Section } from '../common'
+import { Toggle } from '../parts/Button'
+import { CollapsableDiv } from '../parts/CollapsableSection'
 import { EventsForm } from './EventsForm'
 import { FunctionForm } from './FunctionForm'
 import { ResourceForm } from './ResourceForm'
@@ -21,34 +25,29 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
   } = useSettings()
   const { client } = useAptosClient()
   const [word, setWord] = useState(moduleName)
-  const [hideNoFunctions, setHideNoFunctions] = useState(true)
-  const [hideNoResources, setHideNoResources] = useState(false)
+  const [hideNoFunctions, toggleHideNoFunctions] = useToggle(true)
+  const [hideNoResources, toggleHideNoResources] = useToggle()
   return (
     <Section>
       <h2>Modules</h2>
       <Control>
-        <input
-          placeholder="module name..."
-          value={word}
-          onChange={({ target: { value } }) => setWord(value)}
-          onBlur={({ target: { value } }) =>
-            updateValues({ moduleName: value })
-          }
-        />
-        <label>
+        <InputDiv>
+          <SearchIcon />
           <input
-            type="checkbox"
-            checked={hideNoFunctions}
-            onChange={({ target: { checked } }) => setHideNoFunctions(checked)}
+            placeholder="module name..."
+            value={word}
+            onChange={({ target: { value } }) => setWord(value)}
+            onBlur={({ target: { value } }) =>
+              updateValues({ moduleName: value })
+            }
           />
+        </InputDiv>
+        <label>
+          <Toggle isActive={hideNoFunctions} onClick={toggleHideNoFunctions} />{' '}
           Hide No Function Modules
         </label>
         <label>
-          <input
-            type="checkbox"
-            checked={hideNoResources}
-            onChange={({ target: { checked } }) => setHideNoResources(checked)}
-          />
+          <Toggle isActive={hideNoResources} onClick={toggleHideNoResources} />{' '}
           Hide No Resource Modules
         </label>
       </Control>
@@ -70,11 +69,10 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
             })),
           )
           return (
-            <details key={module.name}>
-              <summary>
-                {moduleId}
-                <span>{`(${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}</span>
-              </summary>
+            <CollapsableDiv
+              key={module.name}
+              summary={`${moduleId}(${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}
+            >
               {entryFunctions.length > 0 && (
                 <Functions>
                   <summary>Functions</summary>
@@ -130,7 +128,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                   ))}
                 </Structs>
               )}
-            </details>
+            </CollapsableDiv>
           )
         })}
     </Section>

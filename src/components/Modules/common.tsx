@@ -1,4 +1,6 @@
 import { FC, ReactNode } from 'react'
+import { darkGrey, smokyBlack } from 'src/styles/colors'
+import { fontWeightBold } from 'src/styles/fonts'
 import styled from 'styled-components'
 
 export const InputWrapper: FC<{ label: string; children: ReactNode }> = ({
@@ -25,24 +27,26 @@ export const InputRow = styled.div`
   column-gap: 8px;
   input {
     flex: 1;
-    padding: 4px 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid ${darkGrey};
   }
   > * {
     :last-child {
-      width: 120px;
+      width: 80px;
     }
-  }
-  button {
-    text-align: center;
   }
 `
 
 export const FormContainer = styled.div`
-  padding: 12px 16px 6px;
-  border-top: 1px solid;
+  padding: 32px 40px;
+  font-size: 14px;
+  h3 {
+    font-weight: ${fontWeightBold};
+  }
   form {
-    margin-top: 8px;
-    margin-left: 16px;
+    margin-top: 24px;
+    margin-left: 12px;
 
     display: flex;
     flex-direction: column;
@@ -55,11 +59,15 @@ export const FormContainer = styled.div`
       }
     }
     button {
-      width: 120px;
-      margin-left: auto;
+      width: 80px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      background: ${smokyBlack};
       text-align: center;
+      line-height: 1;
     }
     > button {
+      margin-left: auto;
       margin-top: 12px;
     }
   }

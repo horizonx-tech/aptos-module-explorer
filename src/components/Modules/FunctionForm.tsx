@@ -27,7 +27,7 @@ export const FunctionForm: FC<FunctionFormProps> = ({
   })
   return (
     <FormContainer>
-      <h4>{`${name}(${params.join(', ')})`}</h4>
+      <h3>{`${name}(${params.join(', ')})`}</h3>
       <FormProvider {...methods}>
         <form onSubmit={onSubmmit && methods.handleSubmit(onSubmmit)}>
           <TypeParamInput />

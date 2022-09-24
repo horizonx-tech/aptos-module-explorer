@@ -1,4 +1,8 @@
-import { connect, WalletInterface, WalletType } from '@horizonx/aptos-wallet-connector'
+import {
+  connect,
+  WalletInterface,
+  WalletType,
+} from '@horizonx/aptos-wallet-connector'
 import {
   createContext,
   FC,
@@ -7,7 +11,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { WALLET_URLS } from 'src/constants'
+import { WALLET_INFO } from 'src/constants'
 
 export const useWallet = () => useContext(WalletContext)
 
@@ -39,7 +43,7 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
       value={{
         connect: async (type) => {
           const client = await connect(type).catch(() => {
-            window.open(WALLET_URLS[type], '_blank', 'noopener')
+            window.open(WALLET_INFO[type].url, '_blank', 'noopener')
             return undefined
           })
           const connectedAccount = await client?.account()
