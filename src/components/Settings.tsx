@@ -113,6 +113,7 @@ const Section = styled.section`
   > div {
     display: flex;
     flex-direction: column;
+    row-gap: 16px;
     span {
       font-size: 20px;
       font-family: ${fontFamilyHeading};
@@ -124,10 +125,7 @@ const Section = styled.section`
     }
   }
   ${WalletsDiv} {
-    margin-top: 24px;
-  }
-  label {
-    row-gap: 16px;
+    margin-top: 8px;
   }
   code {
     padding: 12px 16px;
