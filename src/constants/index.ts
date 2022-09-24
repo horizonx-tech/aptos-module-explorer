@@ -41,7 +41,7 @@ export const WALLET_INFO: Record<
   },
   fewcha: {
     imageSrc: fewchaIcon,
-    label: 'Fecha Wallet',
+    label: 'Fewcha Wallet',
     url: 'https://fewcha.app/',
   },
   pontem: {
