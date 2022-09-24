@@ -5,10 +5,21 @@ import martianIcon from 'public/images/icon_martian.png'
 import petraIcon from 'public/images/icon_petra.png'
 import pontemIcon from 'public/images/icon_pontem.png'
 
-export const PUBLIC_NODE_URLS = [
-  'https://fullnode.devnet.aptoslabs.com/v1',
-  'https://fullnode.testnet.aptoslabs.com/v1',
-]
+export const CHAIN_INFO: Record<number, { name: string; nodeUrls: string[] }> =
+  {
+    [32]: {
+      name: 'Aptos Devnet',
+      nodeUrls: ['https://fullnode.devnet.aptoslabs.com/v1'],
+    },
+    [2]: {
+      name: 'Aptos Testnet',
+      nodeUrls: [' https://fullnode.testnet.aptoslabs.com/v1'],
+    },
+  }
+
+export const PUBLIC_NODE_URLS = Object.values(CHAIN_INFO).flatMap(
+  ({ nodeUrls }) => nodeUrls,
+)
 
 export const WALLET_INFO: Record<
   WalletType,

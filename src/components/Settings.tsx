@@ -2,39 +2,42 @@ import { WalletType } from '@horizonx/aptos-wallet-connector'
 import Image from 'next/image'
 import { FC } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { PUBLIC_NODE_URLS, WALLET_INFO } from 'src/constants'
+import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
 import { useWallet } from 'src/hooks/useWallet'
 import { darkGrey, smokyBlack, trueBlack } from 'src/styles/colors'
 import { fontFamilyHeading } from 'src/styles/fonts'
+import { getNodeUrls } from 'src/utils/chain'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
 
 export const Settings: FC = () => {
-  const { account, signer, connect } = useWallet()
+  const { account, chainId, signer, connect } = useWallet()
   const {
     values: { nodeUrl, account: targetAccount },
     updateValues,
   } = useSettings()
 
+  const nodeUrls = getNodeUrls(chainId)
   const methods = useForm()
   return (
     <Section>
       <FormProvider {...methods}>
         <div>
           <span>Signer</span>
-          {signer && <code>{account}</code>}
+          {account && <code>{account}</code>}
+          {chainId && (
+            <code>{`Network: ${
+              CHAIN_INFO[chainId]?.name || 'Unknown'
+            } (ChainId: ${chainId})`}</code>
+          )}
           <WalletsDiv>
             {Object.keys(WALLET_INFO).map((key) => {
               const { imageSrc, label } = WALLET_INFO[key as WalletType]
               return (
                 <WalletButton
                   key={key}
-                  onClick={async () => {
-                    const connectedWallet = await connect(key as WalletType)
-                    if (!connectedWallet?.account) return
-                    close()
-                  }}
+                  onClick={async () => connect(key as WalletType)}
                   disabled={signer?.type === key}
                 >
                   <Image src={imageSrc} alt={label} width={24} height={24} />
@@ -50,7 +53,7 @@ export const Settings: FC = () => {
           <InputDiv>
             <input {...methods.register('nodeUrl')} list="node-urls" />
             <datalist id="node-urls">
-              {PUBLIC_NODE_URLS.map((url) => (
+              {nodeUrls.map((url) => (
                 <option key={url} value={url} />
               ))}
             </datalist>
