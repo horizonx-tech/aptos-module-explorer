@@ -5,6 +5,7 @@ import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useSettings } from 'src/hooks/useSettings'
 import { useToggle } from 'src/hooks/useToggle'
 import { useWallet } from 'src/hooks/useWallet'
+import { shortenInnerAddress } from 'src/utils/address'
 import { isEventHandle, isResource, notFalsy } from 'src/utils/filter'
 import styled from 'styled-components'
 import { Control, InputDiv, Section } from '../common'
@@ -27,6 +28,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
   const [word, setWord] = useState(moduleName)
   const [hideNoFunctions, toggleHideNoFunctions] = useToggle(true)
   const [hideNoResources, toggleHideNoResources] = useToggle()
+  const moduleIds = modules.map(({ address, name }) => `${address}:${name}`)
   return (
     <Section>
       <h2>Modules</h2>
@@ -40,7 +42,15 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
             onBlur={({ target: { value } }) =>
               updateValues({ moduleName: value })
             }
+            list="module-ids_functions"
           />
+          <datalist id="module-ids_functions">
+            {moduleIds.map((id) => (
+              <option key={id} value={id}>
+                {shortenInnerAddress(id)}
+              </option>
+            ))}
+          </datalist>
         </InputDiv>
         <label>
           <Toggle isActive={hideNoFunctions} onClick={toggleHideNoFunctions} />{' '}
@@ -71,7 +81,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
           return (
             <CollapsableDiv
               key={module.name}
-              summary={`${moduleId}(${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}
+              summary={`${moduleId} (${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}
             >
               {entryFunctions.length > 0 && (
                 <Functions>

@@ -16,6 +16,7 @@ export const Resources: FC<{
   const items = useMemo(() => categorize(props.resources), [props.resources])
   const [word, setWord] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const moduleIds = Object.keys(items)
   return (
     <ResourcesSection>
       <h2>Resources</h2>
@@ -26,7 +27,15 @@ export const Resources: FC<{
             placeholder="module id..."
             value={word}
             onChange={({ target: { value } }) => setWord(value)}
+            list="module-ids_resources"
           />
+          <datalist id="module-ids_resources">
+            {moduleIds.map((id) => (
+              <option key={id} value={id}>
+                {shortenInnerAddress(id)}
+              </option>
+            ))}
+          </datalist>
         </InputDiv>
         <button
           onClick={async () => {
@@ -45,7 +54,12 @@ export const Resources: FC<{
           return (
             <CollapsableDiv key={moduleId} summary={moduleId}>
               {Object.entries(structs).map(([name, resources]) => (
-                <StructResources key={name} name={name} resources={resources} />
+                <StructResources
+                  key={name}
+                  moduleId={moduleId}
+                  name={name}
+                  resources={resources}
+                />
               ))}
             </CollapsableDiv>
           )
@@ -55,11 +69,14 @@ export const Resources: FC<{
 }
 
 const StructResources: FC<{
+  moduleId: string
   name: string
   resources: Types.MoveResource[]
-}> = ({ name, resources }) => {
+}> = ({ moduleId, name, resources }) => {
   const [word, setWord] = useState('')
   const [ellipsizeAddress, toggleEllipsizeAddress] = useToggle(true)
+  const listId = `types_${moduleId}::${name}`
+  const types = resources.map(({ type }) => type)
   return (
     <details key={name}>
       <summary>{name}</summary>
@@ -70,7 +87,15 @@ const StructResources: FC<{
             placeholder="type..."
             value={word}
             onChange={({ target: { value } }) => setWord(value)}
+            list={listId}
           />
+          <datalist id={listId}>
+            {types.map((type) => (
+              <option key={type} value={type}>
+                {shortenInnerAddress(type)}
+              </option>
+            ))}
+          </datalist>
         </InputDiv>
         <label>
           <Toggle

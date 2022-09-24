@@ -24,6 +24,10 @@ export const GlobalStyles = createGlobalStyle`
         color: ${tiffany};
       }
     }
+    input {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     > div#__next {
       height: 100%;
       display: flex;
