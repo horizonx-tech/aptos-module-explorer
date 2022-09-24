@@ -1,0 +1,19 @@
+{
+  "name": "Aptos Module/ResourceExplorer",
+  "short_name": "Aptos Module/ResourceExplorer",
+  "icons": [
+    {
+      "src": "/favicons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#121113",
+  "background_color": "#121113",
+  "display": "standalone"
+}
