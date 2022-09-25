@@ -1,6 +1,6 @@
 import { WalletType } from '@horizonx/aptos-wallet-connector'
 import Image from 'next/image'
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
@@ -20,6 +20,13 @@ export const Settings: FC = () => {
 
   const nodeUrls = getNodeUrls(chainId)
   const methods = useForm()
+
+  useEffect(() => {
+    if (chainId == null) return
+    const nodeUrls = getNodeUrls(chainId)
+    if (!nodeUrls.length) return
+    updateValues({ nodeUrl: nodeUrls[0] })
+  }, [chainId])
   return (
     <Section>
       <FormProvider {...methods}>
