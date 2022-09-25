@@ -2,10 +2,17 @@ import { Types } from 'aptos'
 import { FC, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { convert } from 'src/utils/converter'
-import { FormContainer, InputRow, InputWrapper } from './common'
+import { Code } from '../common'
+import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
 
 const NUMBER_TYPE_REGEX = /u(8|16|32|64|128)/
 
+export type FunctionResult =
+  | { tx: Types.Transaction }
+  | {
+      payload: Types.TransactionPayload_EntryFunctionPayload
+      error: any
+    }
 export type FormData = {
   type_arguments: string[]
   arguments: (string | string[])[]
@@ -13,12 +20,13 @@ export type FormData = {
 
 type FunctionFormProps = {
   fn: Types.MoveFunction
-  onSubmit?: (data: FormData) => Promise<any>
+  onSubmit?: (data: FormData) => Promise<FunctionResult>
 }
 export const FunctionForm: FC<FunctionFormProps> = ({
   fn: { name, params },
-  onSubmit: onSubmmit,
+  onSubmit,
 }) => {
+  const [result, setResult] = useState<any>()
   const methods = useForm<FormData>({
     defaultValues: {
       arguments: [],
@@ -29,16 +37,33 @@ export const FunctionForm: FC<FunctionFormProps> = ({
     <FormContainer>
       <h3>{`${name}(${params.join(', ')})`}</h3>
       <FormProvider {...methods}>
-        <form onSubmit={onSubmmit && methods.handleSubmit(onSubmmit)}>
+        <form
+          onSubmit={
+            onSubmit &&
+            methods.handleSubmit(async (data) => {
+              setResult(undefined)
+              const res = await onSubmit(data)
+              setResult(res)
+            })
+          }
+        >
           <TypeParamInput />
           {params
             .filter((param) => param !== '&signer')
             .map((param, idx) => (
               <ParamInput key={idx} param={param} idx={idx} />
             ))}
-          <button disabled={!onSubmmit}>Call</button>
+          <SubmitDiv>
+            {result && (
+              <button type="button" onClick={() => setResult(undefined)}>
+                Clear
+              </button>
+            )}
+            <button disabled={!onSubmit}>Call</button>
+          </SubmitDiv>
         </form>
       </FormProvider>
+      {result && <Code>{JSON.stringify(result, null, 2)}</Code>}
     </FormContainer>
   )
 }

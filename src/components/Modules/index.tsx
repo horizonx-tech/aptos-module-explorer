@@ -90,17 +90,29 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                     <FunctionForm
                       key={fn.name}
                       fn={fn}
-                      onSubmit={async (data) => {
-                        if (!signer) return
-                        const payload = {
-                          type: 'entry_function_payload',
-                          function: `${module.address}::${module.name}::${fn.name}`,
-                          type_arguments: data.type_arguments.filter(notFalsy),
-                          arguments: data.arguments,
-                        }
-                        console.log(payload)
-                        signer.signAndSubmitTransaction(payload)
-                      }}
+                      onSubmit={
+                        signer && client
+                          ? async (data) => {
+                              const payload = {
+                                type: 'entry_function_payload',
+                                function: `${module.address}::${module.name}::${fn.name}`,
+                                type_arguments:
+                                  data.type_arguments.filter(notFalsy),
+                                arguments: data.arguments,
+                              }
+                              try {
+                                const txHash =
+                                  await signer.signAndSubmitTransaction(payload)
+                                const tx = await client.getTransactionByHash(
+                                  txHash,
+                                )
+                                return { tx }
+                              } catch (error) {
+                                return { error, payload }
+                              }
+                            }
+                          : undefined
+                      }
                     />
                   ))}
                 </Functions>

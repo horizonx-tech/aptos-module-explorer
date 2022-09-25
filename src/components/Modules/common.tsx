@@ -38,6 +38,13 @@ export const InputRow = styled.div`
   }
 `
 
+export const SubmitDiv = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  column-gap: 12px;
+`
+
 export const FormContainer = styled.div`
   padding: 32px 40px;
   font-size: 14px;
@@ -66,8 +73,7 @@ export const FormContainer = styled.div`
       text-align: center;
       line-height: 1;
     }
-    > button {
-      margin-left: auto;
+    ${SubmitDiv} {
       margin-top: 12px;
     }
   }
