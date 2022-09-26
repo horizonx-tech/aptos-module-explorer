@@ -70,8 +70,6 @@ export const FormContainer = styled.div`
       padding: 10px 16px;
       border-radius: 8px;
       background: ${smokyBlack};
-      text-align: center;
-      line-height: 1;
       transition: background, color, 0.2s ease-in-out;
       :enabled:hover,
       :enabled:focus {

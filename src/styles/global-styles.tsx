@@ -19,10 +19,15 @@ export const GlobalStyles = createGlobalStyle`
       font-family: ${fontFamilyHeading};
     }
     a {
-      :enabled:hover,
-      :enabled:focus {
+      :hover,
+      :focus {
         color: ${tiffany};
+        outline: none;
       }
+    }
+    button {
+      text-align: center;
+      line-height: 1;
     }
     input {
       overflow: hidden;

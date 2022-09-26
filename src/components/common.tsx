@@ -1,5 +1,4 @@
 import { smokyBlack } from 'src/styles/colors'
-import { fontWeightMedium } from 'src/styles/fonts'
 import styled from 'styled-components'
 
 export const InputDiv = styled.div`
@@ -15,15 +14,6 @@ export const Control = styled.div`
   display: flex;
   align-items: center;
   column-gap: 24px;
-  label {
-    display: flex;
-    align-items: center;
-    column-gap: 12px;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-    font-weight: ${fontWeightMedium};
-  }
 `
 
 export const Code = styled.code`

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { cream, darkBlack, tiffany } from 'src/styles/colors'
 import { fontWeightMedium } from 'src/styles/fonts'
 import styled, { css, keyframes } from 'styled-components'
@@ -27,13 +27,12 @@ export const WalletButton = styled.button`
   font-weight: ${fontWeightMedium};
   color: ${cream};
   backdrop-filter: blur(8px) brightness(1);
-  transition: border-color 0.2s ease-in-out;
   :disabled {
     border-color: ${tiffany};
     color: ${tiffany};
   }
-  :hover,
-  :focus {
+  :enabled:hover,
+  :enabled:focus {
     animation: ${blinkKeyframes} 2s ease-out infinite;
   }
 `
@@ -42,49 +41,61 @@ export const Toggle: FC<{
   isActive?: boolean
   activeColor?: string
   onClick: VoidFunction
-}> = ({ isActive, activeColor, onClick }) => {
+  children?: ReactNode
+}> = ({ isActive, activeColor, onClick, children }) => {
   return (
-    <div>
-      <ToggleButton
-        $isActive={isActive}
-        $activeColor={activeColor}
-        onClick={onClick}
-      >
-        <div />
-      </ToggleButton>
-    </div>
+    <ToggleButton
+      $isActive={isActive}
+      $activeColor={activeColor}
+      onClick={onClick}
+    >
+      <div />
+      {children}
+    </ToggleButton>
   )
 }
 const ToggleButton = styled.button<{
   $isActive?: boolean
   $activeColor?: string
 }>`
-  position: relative;
   display: flex;
-  width: 32px;
-  height: 20px;
-  padding: 4px;
-  margin: 0 auto;
-  border-radius: 12px;
-  background: ${darkBlack};
-  > div {
-    position: absolute;
-    top: 50%;
-    transform: translate(0, -50%);
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: ${cream};
-    transition: transform 0.2s ease-in-out;
+  align-items: center;
+  column-gap: 12px;
+  :hover,
+  :focus {
+    color: ${tiffany};
+  }
+  > div:first-child {
+    position: relative;
+    display: flex;
+    width: 32px;
+    height: 20px;
+    padding: 4px;
+    margin: 0 auto;
+    border-radius: 12px;
+    background: ${darkBlack};
+    ::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      transform: translate(0, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: ${cream};
+      transition: transform 0.2s ease-in-out;
+    }
   }
   ${({ $isActive, $activeColor = tiffany }) =>
     $isActive &&
     css`
-      background: ${$activeColor};
-      > div {
-        border-radius: 50%;
-        transform: translate(100%, -50%);
-        background: ${darkBlack};
+      > div:first-child {
+        background: ${$activeColor};
+        ::after {
+          border-radius: 50%;
+          transform: translate(100%, -50%);
+          background: ${darkBlack};
+        }
       }
     `}
 `

@@ -1,7 +1,7 @@
 import BottomTriangle from 'public/svgs/triangle_bottom.svg'
 import { FC, ReactNode } from 'react'
 import { useToggle } from 'src/hooks/useToggle'
-import { smokyBlack, trueBlack } from 'src/styles/colors'
+import { jetBlack, smokyBlack, tiffany, trueBlack } from 'src/styles/colors'
 import styled, { css } from 'styled-components'
 
 export const CollapsableDiv = styled<
@@ -32,6 +32,11 @@ const StyledDiv = styled.div<{ $collapsed: boolean }>`
     font-size: 20px;
     svg {
       transform: rotate(-90deg);
+    }
+    :hover,
+    :focus {
+      background: ${tiffany};
+      color: ${jetBlack};
     }
   }
   > div {

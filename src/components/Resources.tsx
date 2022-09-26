@@ -135,12 +135,9 @@ const categorize = (resources: Types.MoveResource[]) =>
 const ResourcesSection = styled(Section)`
   ${Control} {
     > button {
-      background: ${smokyBlack};
       padding: 10px 16px;
       border-radius: 8px;
       background: ${smokyBlack};
-      text-align: center;
-      line-height: 1;
       :hover,
       :focus {
         background: ${tiffany};

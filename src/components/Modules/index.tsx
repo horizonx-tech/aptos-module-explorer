@@ -52,14 +52,12 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
             ))}
           </datalist>
         </InputDiv>
-        <label>
-          <Toggle isActive={hideNoFunctions} onClick={toggleHideNoFunctions} />{' '}
+        <Toggle isActive={hideNoFunctions} onClick={toggleHideNoFunctions}>
           Hide No Function Modules
-        </label>
-        <label>
-          <Toggle isActive={hideNoResources} onClick={toggleHideNoResources} />{' '}
+        </Toggle>
+        <Toggle isActive={hideNoResources} onClick={toggleHideNoResources}>
           Hide No Resource Modules
-        </label>
+        </Toggle>
       </Control>
       {modules
         .filter(({ name }) => !word || name.includes(word))
