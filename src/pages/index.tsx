@@ -2,6 +2,7 @@ import { Types } from 'aptos'
 import type { NextPage } from 'next'
 import { useCallback, useEffect, useState } from 'react'
 import { Modules } from 'src/components/Modules'
+import { Header } from 'src/components/parts/Header'
 import { Resources } from 'src/components/Resources'
 import { Settings } from 'src/components/Settings'
 import { useAptosClient } from 'src/hooks/useAptosClient'
@@ -48,14 +49,17 @@ const Home: NextPage = () => {
   }, [refreshModules, refreshResources])
 
   return (
-    <Main>
-      <h1>Aptos Module/Resource Explorer</h1>
-      <Settings />
-      {modules && modules.length > 0 && <Modules modules={modules} />}
-      {resources && resources.length > 0 && (
-        <Resources resources={resources} refresh={refreshResources} />
-      )}
-    </Main>
+    <>
+      <Header />
+      <Main>
+        <h1>Aptos Module/Resource Explorer</h1>
+        <Settings />
+        {modules && modules.length > 0 && <Modules modules={modules} />}
+        {resources && resources.length > 0 && (
+          <Resources resources={resources} refresh={refreshResources} />
+        )}
+      </Main>
+    </>
   )
 }
 
