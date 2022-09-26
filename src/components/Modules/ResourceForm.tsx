@@ -1,7 +1,7 @@
 import { AptosClient, Types } from 'aptos'
 import { FC, useRef, useState } from 'react'
 import { shortenInnerAddress } from 'src/utils/address'
-import { Code } from '../common'
+import { Code, FormButton } from '../common'
 import { FormContainer, InputRow, InputWrapper } from './common'
 
 type ResourceFormProps = {
@@ -24,7 +24,7 @@ export const ResourceForm: FC<ResourceFormProps> = ({
         <InputWrapper label="account">
           <InputRow>
             <input ref={ref} />
-            <button
+            <FormButton
               onClick={async () => {
                 setResources(undefined)
                 setError(undefined)
@@ -48,7 +48,7 @@ export const ResourceForm: FC<ResourceFormProps> = ({
               disabled={!getAccountResources}
             >
               Call
-            </button>
+            </FormButton>
           </InputRow>
         </InputWrapper>
       </form>

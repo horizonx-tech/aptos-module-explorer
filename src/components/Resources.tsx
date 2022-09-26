@@ -2,10 +2,9 @@ import { Types } from 'aptos'
 import SearchIcon from 'public/svgs/icon_search.svg'
 import { FC, useMemo, useState } from 'react'
 import { useToggle } from 'src/hooks/useToggle'
-import { jetBlack, smokyBlack, tiffany } from 'src/styles/colors'
 import { shortenInnerAddress } from 'src/utils/address'
 import styled from 'styled-components'
-import { Code, Control, InputDiv, Section } from './common'
+import { Code, Control, FormButton, InputDiv, Section } from './common'
 import { Toggle } from './parts/Button'
 import { CollapsableDiv } from './parts/CollapsableSection'
 
@@ -36,13 +35,16 @@ export const Resources: FC<{
             ))}
           </datalist>
         </InputDiv>
-        <button onClick={props.refresh}>Refresh</button>
+        <FormButton onClick={props.refresh}>Refresh</FormButton>
       </Control>
       {Object.entries(items)
         .filter(([moduleId]) => moduleId.includes(word))
         .map(([moduleId, structs]) => {
           return (
-            <CollapsableDiv key={moduleId} summary={moduleId}>
+            <CollapsableDiv
+              key={moduleId}
+              summary={shortenInnerAddress(moduleId)}
+            >
               {Object.entries(structs).map(([name, resources]) => (
                 <StructResources
                   key={name}
@@ -87,13 +89,9 @@ const StructResources: FC<{
             ))}
           </datalist>
         </InputDiv>
-        <label>
-          <Toggle
-            isActive={ellipsizeAddress}
-            onClick={toggleEllipsizeAddress}
-          />
+        <Toggle isActive={ellipsizeAddress} onClick={toggleEllipsizeAddress}>
           Ellipsize Address
-        </label>
+        </Toggle>
       </Control>
       <Code>
         {JSON.stringify(
@@ -133,18 +131,6 @@ const categorize = (resources: Types.MoveResource[]) =>
   }, {})
 
 const ResourcesSection = styled(Section)`
-  ${Control} {
-    > button {
-      padding: 10px 16px;
-      border-radius: 8px;
-      background: ${smokyBlack};
-      :hover,
-      :focus {
-        background: ${tiffany};
-        color: ${jetBlack};
-      }
-    }
-  }
   details {
     ${Control} {
       margin-top: 24px;

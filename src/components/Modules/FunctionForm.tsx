@@ -3,7 +3,7 @@ import { FC, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { useLoading } from 'src/hooks/useLoading'
 import { convert } from 'src/utils/converter'
-import { Code } from '../common'
+import { Code, FormButton } from '../common'
 import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
 
 const NUMBER_TYPE_REGEX = /u(8|16|32|64|128)/
@@ -59,11 +59,11 @@ export const FunctionForm: FC<FunctionFormProps> = ({
             ))}
           <SubmitDiv>
             {result && (
-              <button type="button" onClick={() => setResult(undefined)}>
+              <FormButton type="button" onClick={() => setResult(undefined)}>
                 Clear
-              </button>
+              </FormButton>
             )}
-            <button disabled={!onSubmit}>Call</button>
+            <FormButton disabled={!onSubmit}>Call</FormButton>
           </SubmitDiv>
         </form>
       </FormProvider>
@@ -91,15 +91,15 @@ const ParamInput: FC<ParamInputProps> = ({ param, idx }) => {
               })}
             />
             {inputIdx === 0 ? (
-              <button
+              <FormButton
                 onClick={() => {
                   setInputLength(inputLength + 1)
                 }}
               >
                 Add
-              </button>
+              </FormButton>
             ) : (
-              <button
+              <FormButton
                 onClick={() => {
                   setInputLength(inputLength - 1)
                   const values = getValues(`arguments.${idx}`) as string[]
@@ -108,7 +108,7 @@ const ParamInput: FC<ParamInputProps> = ({ param, idx }) => {
                 }}
               >
                 Remove
-              </button>
+              </FormButton>
             )}
           </InputRow>
         ))
@@ -134,15 +134,15 @@ const TypeParamInput: FC = () => {
         <InputRow key={inputIdx}>
           <input {...register(`type_arguments.${inputIdx}`)} />
           {inputIdx === 0 ? (
-            <button
+            <FormButton
               onClick={() => {
                 setInputLength(inputLength + 1)
               }}
             >
               Add
-            </button>
+            </FormButton>
           ) : (
-            <button
+            <FormButton
               onClick={() => {
                 setInputLength(inputLength - 1)
                 const values = getValues(`type_arguments`)
@@ -151,7 +151,7 @@ const TypeParamInput: FC = () => {
               }}
             >
               Remove
-            </button>
+            </FormButton>
           )}
         </InputRow>
       ))}

@@ -61,6 +61,7 @@ const ToggleButton = styled.button<{
   display: flex;
   align-items: center;
   column-gap: 12px;
+  white-space: nowrap;
   :hover,
   :focus {
     color: ${tiffany};

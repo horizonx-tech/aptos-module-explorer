@@ -79,7 +79,11 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
           return (
             <CollapsableDiv
               key={module.name}
-              summary={`${moduleId} (${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}
+              summary={`${shortenInnerAddress(moduleId)} (${
+                entryFunctions.length
+              } entry functions, ${resources.length} resources, ${
+                events.length
+              } events)`}
             >
               {entryFunctions.length > 0 && (
                 <Functions>

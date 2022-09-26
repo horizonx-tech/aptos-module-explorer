@@ -12,7 +12,11 @@ import {
   tiffany,
   trueBlack,
 } from 'src/styles/colors'
-import { fontFamilyHeading, fontWeightBold } from 'src/styles/fonts'
+import {
+  fontFamilyHeading,
+  fontWeightBold,
+  fontWeightMedium,
+} from 'src/styles/fonts'
 import { getNodeUrls } from 'src/utils/chain'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
@@ -114,6 +118,8 @@ const InputDiv = styled.div`
   button {
     padding: 8px 12px;
     border-radius: 4px;
+    font-size: 14px;
+    font-weight: ${fontWeightMedium};
     background: ${darkGrey};
     :disabled {
       opacity: 0.5;

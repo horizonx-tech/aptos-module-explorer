@@ -30,6 +30,10 @@ const StyledDiv = styled.div<{ $collapsed: boolean }>`
     border-radius: 6px;
     background: ${smokyBlack};
     font-size: 20px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     svg {
       transform: rotate(-90deg);
     }

@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react'
-import { darkGrey, jetBlack, smokyBlack, tiffany } from 'src/styles/colors'
+import { darkGrey } from 'src/styles/colors'
 import { fontWeightBold } from 'src/styles/fonts'
 import styled from 'styled-components'
 
@@ -63,18 +63,6 @@ export const FormContainer = styled.div`
       justify-content: space-between;
       span {
         line-height: 1.875;
-      }
-    }
-    button {
-      width: 80px;
-      padding: 10px 16px;
-      border-radius: 8px;
-      background: ${smokyBlack};
-      transition: background, color, 0.2s ease-in-out;
-      :enabled:hover,
-      :enabled:focus {
-        background: ${tiffany};
-        color: ${jetBlack};
       }
     }
     ${SubmitDiv} {

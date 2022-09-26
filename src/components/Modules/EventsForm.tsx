@@ -1,7 +1,7 @@
 import { AptosClient, Types } from 'aptos'
 import { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { Code } from '../common'
+import { Code, FormButton } from '../common'
 import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
 
 export type FormData = {
@@ -76,7 +76,7 @@ export const EventsForm: FC<EventsFormProps> = ({
             </InputRow>
           </InputWrapper>
           <SubmitDiv>
-            <button disabled={!getEventsByEventHandle}>Call</button>
+            <FormButton disabled={!getEventsByEventHandle}>Call</FormButton>
           </SubmitDiv>
         </form>
       </FormProvider>
