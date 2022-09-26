@@ -1,7 +1,19 @@
 import { FC } from 'react'
 import { cream, darkBlack, tiffany } from 'src/styles/colors'
 import { fontWeightMedium } from 'src/styles/fonts'
-import styled, { css } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
+
+const blinkKeyframes = keyframes`
+  0%,
+  100% {
+    border-color: ${tiffany}40;
+    color: ${cream}80;
+  }
+  50% {
+    border-color: ${tiffany};
+    color: ${tiffany};
+  }
+`
 
 export const WalletButton = styled.button`
   display: flex;
@@ -18,6 +30,11 @@ export const WalletButton = styled.button`
   transition: border-color 0.2s ease-in-out;
   :disabled {
     border-color: ${tiffany};
+    color: ${tiffany};
+  }
+  :hover,
+  :focus {
+    animation: ${blinkKeyframes} 2s ease-out infinite;
   }
 `
 

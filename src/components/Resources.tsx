@@ -2,7 +2,7 @@ import { Types } from 'aptos'
 import SearchIcon from 'public/svgs/icon_search.svg'
 import { FC, useMemo, useState } from 'react'
 import { useToggle } from 'src/hooks/useToggle'
-import { smokyBlack } from 'src/styles/colors'
+import { jetBlack, smokyBlack, tiffany } from 'src/styles/colors'
 import { shortenInnerAddress } from 'src/utils/address'
 import styled from 'styled-components'
 import { Code, Control, InputDiv, Section } from './common'
@@ -15,7 +15,6 @@ export const Resources: FC<{
 }> = (props) => {
   const items = useMemo(() => categorize(props.resources), [props.resources])
   const [word, setWord] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
   const moduleIds = Object.keys(items)
   return (
     <ResourcesSection>
@@ -37,16 +36,7 @@ export const Resources: FC<{
             ))}
           </datalist>
         </InputDiv>
-        <button
-          onClick={async () => {
-            setIsLoading(true)
-            await props.refresh()
-            setIsLoading(false)
-          }}
-        >
-          Refresh
-        </button>
-        {isLoading && <div>Loading...</div>}
+        <button onClick={props.refresh}>Refresh</button>
       </Control>
       {Object.entries(items)
         .filter(([moduleId]) => moduleId.includes(word))
@@ -151,6 +141,11 @@ const ResourcesSection = styled(Section)`
       background: ${smokyBlack};
       text-align: center;
       line-height: 1;
+      :hover,
+      :focus {
+        background: ${tiffany};
+        color: ${jetBlack};
+      }
     }
   }
   details {

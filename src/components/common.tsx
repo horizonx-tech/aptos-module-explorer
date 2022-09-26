@@ -21,6 +21,7 @@ export const Control = styled.div`
     column-gap: 12px;
     cursor: pointer;
     font-size: 14px;
+    line-height: 1;
     font-weight: ${fontWeightMedium};
   }
 `

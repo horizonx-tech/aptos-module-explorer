@@ -1,6 +1,7 @@
 import { Types } from 'aptos'
 import { FC, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { useLoading } from 'src/hooks/useLoading'
 import { convert } from 'src/utils/converter'
 import { Code } from '../common'
 import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
@@ -33,6 +34,7 @@ export const FunctionForm: FC<FunctionFormProps> = ({
       type_arguments: [],
     },
   })
+  const { setIsLoading } = useLoading()
   return (
     <FormContainer>
       <h3>{`${name}(${params.join(', ')})`}</h3>
@@ -42,8 +44,10 @@ export const FunctionForm: FC<FunctionFormProps> = ({
             onSubmit &&
             methods.handleSubmit(async (data) => {
               setResult(undefined)
+              setIsLoading(true)
               const res = await onSubmit(data)
               setResult(res)
+              setIsLoading(false)
             })
           }
         >

@@ -5,8 +5,14 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
 import { useWallet } from 'src/hooks/useWallet'
-import { darkGrey, smokyBlack, trueBlack } from 'src/styles/colors'
-import { fontFamilyHeading } from 'src/styles/fonts'
+import {
+  darkGrey,
+  jetBlack,
+  smokyBlack,
+  tiffany,
+  trueBlack,
+} from 'src/styles/colors'
+import { fontFamilyHeading, fontWeightBold } from 'src/styles/fonts'
 import { getNodeUrls } from 'src/utils/chain'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
@@ -112,6 +118,12 @@ const InputDiv = styled.div`
     :disabled {
       opacity: 0.5;
     }
+    transition: background, color, 0.2s ease-in-out;
+    :enabled:hover,
+    :enabled:focus {
+      background: ${tiffany};
+      color: ${jetBlack};
+    }
   }
 `
 
@@ -127,6 +139,7 @@ const Section = styled.section`
     span {
       font-size: 20px;
       font-family: ${fontFamilyHeading};
+      font-weight: ${fontWeightBold};
     }
     div {
       display: flex;

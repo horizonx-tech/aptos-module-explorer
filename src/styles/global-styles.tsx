@@ -18,7 +18,7 @@ export const GlobalStyles = createGlobalStyle`
     h1, h2 {
       font-family: ${fontFamilyHeading};
     }
-    a, button {
+    a {
       :enabled:hover,
       :enabled:focus {
         color: ${tiffany};
