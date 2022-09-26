@@ -2,6 +2,7 @@ import { Types } from 'aptos'
 import type { NextPage } from 'next'
 import { useCallback, useEffect, useState } from 'react'
 import { Modules } from 'src/components/Modules'
+import { Footer } from 'src/components/parts/Footer'
 import { Header } from 'src/components/parts/Header'
 import { Resources } from 'src/components/Resources'
 import { Settings } from 'src/components/Settings'
@@ -59,6 +60,7 @@ const Home: NextPage = () => {
           <Resources resources={resources} refresh={refreshResources} />
         )}
       </Main>
+      <Footer />
     </>
   )
 }
