@@ -1,9 +1,13 @@
 import { AptosClient, Types } from 'aptos'
-import { FC, useRef, useState } from 'react'
+import { FC, useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { shortenInnerAddress } from 'src/utils/address'
 import { Code, FormButton } from '../common'
 import { FormContainer, InputRow, InputWrapper } from './common'
 
+type ResourceFormData = {
+  account: string
+}
 type ResourceFormProps = {
   moduleId: string
   resource: Types.MoveStruct
@@ -16,42 +20,39 @@ export const ResourceForm: FC<ResourceFormProps> = ({
 }) => {
   const [resources, setResources] = useState<Types.MoveResource[]>()
   const [error, setError] = useState<any>()
-  const ref = useRef<HTMLInputElement>(null)
+  const methods = useForm<ResourceFormData>()
   return (
     <FormContainer>
       <h3>{name}</h3>
-      <form>
-        <InputWrapper label="account">
-          <InputRow>
-            <input ref={ref} />
-            <FormButton
-              onClick={async () => {
-                setResources(undefined)
-                setError(undefined)
-                try {
-                  const resources = await getAccountResources!(
-                    ref.current?.value || '',
-                  )
-                  const regex = new RegExp(`^${moduleId}::${name}(<|$)`)
-                  setResources(
-                    resources
-                      .filter(({ type }) => regex.test(type))
-                      .map(({ type, ...values }) => ({
-                        type: shortenInnerAddress(type),
-                        ...values,
-                      })),
-                  )
-                } catch (e) {
-                  setError(e)
-                }
-              }}
-              disabled={!getAccountResources}
-            >
-              Call
-            </FormButton>
-          </InputRow>
-        </InputWrapper>
-      </form>
+      <FormProvider {...methods}>
+        <form
+          onSubmit={methods.handleSubmit(async (data) => {
+            setResources(undefined)
+            setError(undefined)
+            try {
+              const resources = await getAccountResources!(data.account || '')
+              const regex = new RegExp(`^${moduleId}::${name}(<|$)`)
+              setResources(
+                resources
+                  .filter(({ type }) => regex.test(type))
+                  .map(({ type, ...values }) => ({
+                    type: shortenInnerAddress(type),
+                    ...values,
+                  })),
+              )
+            } catch (e) {
+              setError(e)
+            }
+          })}
+        >
+          <InputWrapper label="account">
+            <InputRow>
+              <input {...methods.register('account')} />
+              <FormButton disabled={!getAccountResources}>Call</FormButton>
+            </InputRow>
+          </InputWrapper>
+        </form>
+      </FormProvider>
       <Code>
         {error || resources
           ? JSON.stringify(error || resources, null, 2)
