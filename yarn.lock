@@ -1080,10 +1080,10 @@
     aptos "^1.3.7"
     change-case "^4.1.2"
 
-"@horizonx/aptos-wallet-connector@^0.5.1":
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/@horizonx/aptos-wallet-connector/-/aptos-wallet-connector-0.5.1.tgz#efdf1d46c2a65e1bfe3e74a1ae5397101f8aed52"
-  integrity sha512-fh97XDaVfIH+hxMLydKHaJ6PQ1F/Jr/oiCFchepvLdtgr2KiAtnsUknkGrmCrm3gmN51go0nlA1NBk+E/b2BkA==
+"@horizonx/aptos-wallet-connector@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@horizonx/aptos-wallet-connector/-/aptos-wallet-connector-0.6.0.tgz#58dfd7a5d791d2fdfcc4595f6e3bc5199d98fd80"
+  integrity sha512-cNbXVGCsftiT/KsTawWxWaQfWlLhNbhvM07mBlrYHS0SvucsCgGENdEn445IdC9dnGqVCaqGv34BoWCkBfLFog==
 
 "@humanwhocodes/config-array@^0.10.4":
   version "0.10.4"
