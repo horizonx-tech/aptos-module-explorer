@@ -1,6 +1,19 @@
 import { jetBlack, smokyBlack, tiffany } from 'src/styles/colors'
 import styled from 'styled-components'
 
+export const FormButton = styled.button`
+  width: 80px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: ${smokyBlack};
+  transition: background, color, 0.2s ease-in-out;
+  :enabled:hover,
+  :enabled:focus {
+    background: ${tiffany};
+    color: ${jetBlack};
+  }
+`
+
 export const InputDiv = styled.div`
   display: flex;
   align-items: center;
@@ -14,6 +27,9 @@ export const Control = styled.div`
   display: flex;
   align-items: center;
   column-gap: 24px;
+  ${FormButton} {
+    width: unset;
+  }
 `
 
 export const Code = styled.code`
@@ -40,17 +56,5 @@ export const Section = styled.section`
   }
   ${Control} {
     margin-top: 4px;
-  }
-`
-export const FormButton = styled.button`
-  width: 80px;
-  padding: 10px 16px;
-  border-radius: 8px;
-  background: ${smokyBlack};
-  transition: background, color, 0.2s ease-in-out;
-  :enabled:hover,
-  :enabled:focus {
-    background: ${tiffany};
-    color: ${jetBlack};
   }
 `
