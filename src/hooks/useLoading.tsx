@@ -28,6 +28,6 @@ export const LoadingContextProvider: FC<{ children: ReactNode }> = ({
 
 const GlobalLoadingCircle = styled(LoadingCircle)`
   position: fixed;
-  bottom: 120px;
+  bottom: 80px;
   right: 120px;
 `
