@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app'
+import { Favicons } from 'src/components/parts/meta/Favicons'
 import { SEO } from 'src/components/parts/meta/SEO'
 import { COMMON_SEO_DATA } from 'src/constants/seo'
 import { AptosClientContextProvider } from 'src/hooks/useAptosClient'
@@ -14,6 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <GlobalStyles />
       <SEO {...COMMON_SEO_DATA} />
+      <Favicons />
       <LoadingContextProvider>
         <WalletContextProvider>
           <SettingsContextProvider>
