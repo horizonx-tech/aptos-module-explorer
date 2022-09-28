@@ -48,6 +48,7 @@ export const Settings: FC = () => {
             })`}</code>
           )}
           {values.chainId &&
+            chainId &&
             values.chainId != chainId &&
             `You need to change the chain of your wallet to ${
               values.chainId
