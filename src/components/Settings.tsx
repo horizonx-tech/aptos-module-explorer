@@ -23,20 +23,18 @@ import { WalletButton } from './parts/Button'
 
 export const Settings: FC = () => {
   const { account, chainId, signer, connect } = useWallet()
-  const {
-    values: { nodeUrl, account: targetAccount },
-    updateValues,
-  } = useSettings()
+  const { values, updateValues } = useSettings()
 
   const nodeUrls = getNodeUrls(chainId)
   const methods = useForm()
 
   useEffect(() => {
-    if (chainId == null) return
-    const nodeUrls = getNodeUrls(chainId)
+    const targetChainId = values.chainId || chainId
+    if (targetChainId == null) return
+    const nodeUrls = getNodeUrls(targetChainId)
     if (!nodeUrls.length) return
     updateValues({ nodeUrl: nodeUrls[0] })
-  }, [chainId])
+  }, [chainId, values.chainId])
   return (
     <Section>
       <FormProvider {...methods}>
@@ -44,10 +42,15 @@ export const Settings: FC = () => {
           <span>Signer</span>
           {account && <code>{account}</code>}
           {chainId && (
-            <code>{`Network: ${
+            <code>{`Chain ID: ${chainId} (${
               CHAIN_INFO[chainId]?.name || 'Unknown'
-            } (ChainId: ${chainId})`}</code>
+            })`}</code>
           )}
+          {values.chainId &&
+            values.chainId != chainId &&
+            `You need to change the chain of your wallet to ${
+              values.chainId
+            } (${CHAIN_INFO[values.chainId]?.name}).`}
           <WalletsDiv>
             {Object.keys(WALLET_INFO).map((key) => {
               const { imageSrc, label } = WALLET_INFO[key as WalletType]
@@ -65,8 +68,35 @@ export const Settings: FC = () => {
           </WalletsDiv>
         </div>
         <label>
+          <span>Chain ID</span>
+          {values.chainId && (
+            <code>{`Chain ID: ${values.chainId} (${
+              CHAIN_INFO[+values.chainId]?.name || 'Unknown'
+            })`}</code>
+          )}
+          <InputDiv>
+            <input {...methods.register('chainId')} list="chain-ids" />
+            <datalist id="chain-ids">
+              {Object.keys(CHAIN_INFO).map((chainId) => (
+                <option key={chainId} value={chainId}>
+                  {`${CHAIN_INFO[+chainId].name} (ChainId: ${chainId})`}
+                </option>
+              ))}
+            </datalist>
+            <button
+              onClick={() => {
+                const newChainId = methods.getValues('chainId')
+                updateValues({ chainId: newChainId })
+                methods.setValue('chainId', '')
+              }}
+            >
+              Apply
+            </button>
+          </InputDiv>
+        </label>
+        <label>
           <span>Node URL</span>
-          {nodeUrl && <code>{nodeUrl}</code>}
+          {values.nodeUrl && <code>{values.nodeUrl}</code>}
           <InputDiv>
             <input {...methods.register('nodeUrl')} list="node-urls" />
             <datalist id="node-urls">
@@ -87,11 +117,11 @@ export const Settings: FC = () => {
         </label>
         <label>
           <span>Account</span>
-          {targetAccount && <code>{targetAccount}</code>}
+          {values.account && <code>{values.account}</code>}
           <InputDiv>
             <input {...methods.register('account')} />
             <button
-              disabled={!nodeUrl}
+              disabled={!values.nodeUrl}
               onClick={() => {
                 updateValues({ account: methods.getValues('account') })
                 methods.setValue('account', '')

@@ -14,6 +14,7 @@ export const useSettings = () => useContext(SettingsContext)
 type Settings = Partial<{
   nodeUrl: string
   account: string
+  chainId?: number
   moduleName: string
 }>
 
@@ -30,19 +31,22 @@ const SettingsContext = createContext<SettingsContextInterface>({
 export const SettingsContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [values, setValues] = useState<Settings>({
-    // nodeUrl: 'https://fullnode.devnet.aptoslabs.com/v1',
-  })
+  const [values, setValues] = useState<Settings>({})
 
   const updateValues = useCallback(
     (newValues: Settings) => setValues({ ...values, ...newValues }),
     [values],
   )
   useEffect(() => {
-    const { nodeUrl, account, moduleName } = parse(
+    const { nodeUrl, account, moduleName, chainId } = parse(
       window.location.search.replace('?', ''),
     ) as Settings
-    setValues({ nodeUrl, account, moduleName })
+    setValues({
+      nodeUrl,
+      account,
+      moduleName,
+      chainId: !chainId || Number.isNaN(chainId) ? undefined : +chainId,
+    })
   }, [])
 
   useEffect(() => {
