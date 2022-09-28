@@ -13,7 +13,7 @@ export const CHAIN_INFO: Record<number, { name: string; nodeUrls: string[] }> =
     },
     [2]: {
       name: 'Aptos Testnet',
-      nodeUrls: [' https://fullnode.testnet.aptoslabs.com/v1'],
+      nodeUrls: ['https://fullnode.testnet.aptoslabs.com/v1'],
     },
   }
 
