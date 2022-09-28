@@ -24,7 +24,7 @@ type FunctionFormProps = {
   onSubmit?: (data: FormData) => Promise<FunctionResult>
 }
 export const FunctionForm: FC<FunctionFormProps> = ({
-  fn: { name, params },
+  fn: { name, generic_type_params, params },
   onSubmit,
 }) => {
   const [result, setResult] = useState<any>()
@@ -51,7 +51,9 @@ export const FunctionForm: FC<FunctionFormProps> = ({
             })
           }
         >
-          <TypeParamInput />
+          {generic_type_params.length > 0 && (
+            <TypeParamInput length={generic_type_params.length} />
+          )}
           {params
             .filter((param) => param !== '&signer')
             .map((param, idx) => (
@@ -125,34 +127,14 @@ const ParamInput: FC<ParamInputProps> = ({ param, idx }) => {
     </InputWrapper>
   )
 }
-const TypeParamInput: FC = () => {
-  const { register, getValues, setValue } = useFormContext<FormData>()
-  const [inputLength, setInputLength] = useState(1)
+const TypeParamInput: FC<{ length: number }> = ({ length }) => {
+  const { register } = useFormContext<FormData>()
   return (
     <InputWrapper label="type_arguments">
-      {Array.from(new Array(inputLength)).map((_, inputIdx) => (
+      {Array.from(new Array(length)).map((_, inputIdx) => (
         <InputRow key={inputIdx}>
           <input {...register(`type_arguments.${inputIdx}`)} />
-          {inputIdx === 0 ? (
-            <FormButton
-              onClick={() => {
-                setInputLength(inputLength + 1)
-              }}
-            >
-              Add
-            </FormButton>
-          ) : (
-            <FormButton
-              onClick={() => {
-                setInputLength(inputLength - 1)
-                const values = getValues(`type_arguments`)
-                values.splice(inputIdx, 1)
-                setValue(`type_arguments`, values)
-              }}
-            >
-              Remove
-            </FormButton>
-          )}
+          <div />
         </InputRow>
       ))}
     </InputWrapper>
