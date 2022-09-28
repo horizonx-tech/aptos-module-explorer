@@ -5,7 +5,6 @@ import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useSettings } from 'src/hooks/useSettings'
 import { useToggle } from 'src/hooks/useToggle'
 import { useWallet } from 'src/hooks/useWallet'
-import { shortenInnerAddress } from 'src/utils/address'
 import { isEventHandle, isResource, notFalsy } from 'src/utils/filter'
 import styled from 'styled-components'
 import { Control, InputDiv, Section } from '../common'
@@ -80,11 +79,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
           return (
             <CollapsableDiv
               key={module.name}
-              summary={`${shortenInnerAddress(moduleId)} (${
-                entryFunctions.length
-              } entry functions, ${resources.length} resources, ${
-                events.length
-              } events)`}
+              summary={`${module.name} (${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}
             >
               {entryFunctions.length > 0 && (
                 <Functions>
@@ -98,7 +93,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                           ? async (data) => {
                               const payload = {
                                 type: 'entry_function_payload',
-                                function: `${module.address}::${module.name}::${fn.name}`,
+                                function: `${moduleId}::${fn.name}`,
                                 type_arguments:
                                   data.type_arguments.filter(notFalsy),
                                 arguments: data.arguments,
