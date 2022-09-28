@@ -20,6 +20,7 @@ import {
 import { getNodeUrls } from 'src/utils/chain'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
+import { InputWithDatalist } from './parts/Input'
 
 export const Settings: FC = () => {
   const { account, chainId, signer, connect } = useWallet()
@@ -71,18 +72,21 @@ export const Settings: FC = () => {
           <span>Chain ID</span>
           {values.chainId && (
             <code>{`Chain ID: ${values.chainId} (${
-              CHAIN_INFO[+values.chainId]?.name || 'Unknown'
+              CHAIN_INFO[values.chainId]?.name || 'Unknown'
             })`}</code>
           )}
           <InputDiv>
-            <input {...methods.register('chainId')} list="chain-ids" />
-            <datalist id="chain-ids">
-              {Object.keys(CHAIN_INFO).map((chainId) => (
-                <option key={chainId} value={chainId}>
-                  {`${CHAIN_INFO[+chainId].name} (ChainId: ${chainId})`}
-                </option>
-              ))}
-            </datalist>
+            <InputWithDatalist
+              listId="chain-ids"
+              options={Object.keys(CHAIN_INFO).map((chainId) => ({
+                value: chainId,
+                label: `${CHAIN_INFO[+chainId].name} (ChainId: ${chainId})`,
+              }))}
+              {...methods.register('chainId', {
+                setValueAs: (val) =>
+                  !val || Number.isNaN(+val) ? undefined : +val,
+              })}
+            />
             <button
               onClick={() => {
                 const newChainId = methods.getValues('chainId')
@@ -98,12 +102,11 @@ export const Settings: FC = () => {
           <span>Node URL</span>
           {values.nodeUrl && <code>{values.nodeUrl}</code>}
           <InputDiv>
-            <input {...methods.register('nodeUrl')} list="node-urls" />
-            <datalist id="node-urls">
-              {nodeUrls.map((url) => (
-                <option key={url} value={url} />
-              ))}
-            </datalist>
+            <InputWithDatalist
+              options={nodeUrls}
+              listId="node-urls"
+              {...methods.register('nodeUrl')}
+            />
             <button
               onClick={() => {
                 const newNodeUrl = methods.getValues('nodeUrl')

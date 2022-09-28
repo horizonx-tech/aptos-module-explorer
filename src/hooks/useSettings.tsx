@@ -45,7 +45,7 @@ export const SettingsContextProvider: FC<{ children: ReactNode }> = ({
       nodeUrl,
       account,
       moduleName,
-      chainId: !chainId || Number.isNaN(chainId) ? undefined : +chainId,
+      chainId: !chainId || Number.isNaN(+chainId) ? undefined : +chainId,
     })
   }, [])
 

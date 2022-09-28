@@ -42,4 +42,10 @@ export const GlobalStyles = createGlobalStyle`
       }
     }
   }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    appearance: none;
+    margin: 0;
+  }
+
 `

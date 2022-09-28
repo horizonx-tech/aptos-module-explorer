@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { Control, InputDiv, Section } from '../common'
 import { Toggle } from '../parts/Button'
 import { CollapsableDiv } from '../parts/CollapsableSection'
+import { InputWithDatalist } from '../parts/Input'
 import { EventsForm } from './EventsForm'
 import { FunctionForm } from './FunctionForm'
 import { ResourceForm } from './ResourceForm'
@@ -28,29 +29,32 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
   const [word, setWord] = useState(moduleName)
   const [hideNoFunctions, toggleHideNoFunctions] = useToggle(true)
   const [hideNoResources, toggleHideNoResources] = useToggle()
-  const moduleIds = modules.map(({ address, name }) => `${address}:${name}`)
+  const filteredModules = modules.filter((module) => {
+    const entryFunctions = module.exposed_functions.filter(
+      ({ is_entry }) => is_entry,
+    )
+    if (entryFunctions.length === 0 && hideNoFunctions) return false
+    const resources = module.structs.filter(isResource)
+    if (resources.length === 0 && hideNoResources) return false
+    return true
+  })
+
   return (
     <Section>
       <h2>Modules</h2>
       <Control>
         <InputDiv>
           <SearchIcon />
-          <input
+          <InputWithDatalist
             placeholder="module name..."
             value={word}
             onChange={({ target: { value } }) => setWord(value)}
             onBlur={({ target: { value } }) =>
               updateValues({ moduleName: value })
             }
-            list="module-ids_functions"
+            listId="module-ids_functions"
+            options={filteredModules.map(({ name }) => name)}
           />
-          <datalist id="module-ids_functions">
-            {moduleIds.map((id) => (
-              <option key={id} value={id}>
-                {shortenInnerAddress(id)}
-              </option>
-            ))}
-          </datalist>
         </InputDiv>
         <Toggle isActive={hideNoFunctions} onClick={toggleHideNoFunctions}>
           Hide No Function Modules
@@ -59,16 +63,13 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
           Hide No Resource Modules
         </Toggle>
       </Control>
-      {modules
+      {filteredModules
         .filter(({ name }) => !word || name.includes(word))
         .map((module) => {
           const entryFunctions = module.exposed_functions.filter(
             ({ is_entry }) => is_entry,
           )
-          if (entryFunctions.length === 0 && hideNoFunctions) return <></>
           const resources = module.structs.filter(isResource)
-          if (resources.length === 0 && hideNoResources) return <></>
-
           const moduleId = `${module.address}::${module.name}`
           const events = resources.flatMap(({ name, fields }) =>
             fields.filter(isEventHandle).map(({ name: fieldName }) => ({

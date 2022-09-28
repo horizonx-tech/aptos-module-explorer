@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { Code, Control, FormButton, InputDiv, Section } from './common'
 import { Toggle } from './parts/Button'
 import { CollapsableDiv } from './parts/CollapsableSection'
+import { InputWithDatalist } from './parts/Input'
 
 export const Resources: FC<{
   resources: Types.MoveResource[]
@@ -21,19 +22,16 @@ export const Resources: FC<{
       <Control>
         <InputDiv>
           <SearchIcon />
-          <input
+          <InputWithDatalist
             placeholder="module id..."
             value={word}
             onChange={({ target: { value } }) => setWord(value)}
-            list="module-ids_resources"
+            listId="module-ids_resources"
+            options={moduleIds.map((id) => ({
+              value: id,
+              label: shortenInnerAddress(id),
+            }))}
           />
-          <datalist id="module-ids_resources">
-            {moduleIds.map((id) => (
-              <option key={id} value={id}>
-                {shortenInnerAddress(id)}
-              </option>
-            ))}
-          </datalist>
         </InputDiv>
         <FormButton onClick={props.refresh}>Refresh</FormButton>
       </Control>
@@ -67,27 +65,22 @@ const StructResources: FC<{
 }> = ({ moduleId, name, resources }) => {
   const [word, setWord] = useState('')
   const [ellipsizeAddress, toggleEllipsizeAddress] = useToggle(true)
-  const listId = `types_${moduleId}::${name}`
-  const types = resources.map(({ type }) => type)
   return (
     <details key={name}>
       <summary>{name}</summary>
       <Control>
         <InputDiv>
           <SearchIcon />
-          <input
+          <InputWithDatalist
             placeholder="type..."
             value={word}
             onChange={({ target: { value } }) => setWord(value)}
-            list={listId}
+            listId={`types_${moduleId}::${name}`}
+            options={resources.map(({ type }) => ({
+              value: type,
+              label: shortenInnerAddress(type),
+            }))}
           />
-          <datalist id={listId}>
-            {types.map((type) => (
-              <option key={type} value={type}>
-                {shortenInnerAddress(type)}
-              </option>
-            ))}
-          </datalist>
         </InputDiv>
         <Toggle isActive={ellipsizeAddress} onClick={toggleEllipsizeAddress}>
           Ellipsize Address
