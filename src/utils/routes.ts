@@ -1,6 +1,5 @@
 export const LEIZD = ''
-export const DEV_CENTRAL = ''
-
+export const DEV_CENTRAL = 'https://leizd.com/devcentral'
 export const REPOSITORY =
   'https://github.com/horizonx-tech/aptos-module-explorer'
 
