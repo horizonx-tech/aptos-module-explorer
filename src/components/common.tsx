@@ -1,4 +1,4 @@
-import { jetBlack, smokyBlack, tiffany } from 'src/styles/colors'
+import { darkGrey, jetBlack, smokyBlack, tiffany } from 'src/styles/colors'
 import styled from 'styled-components'
 
 export const FormButton = styled.button`
@@ -11,6 +11,10 @@ export const FormButton = styled.button`
   :enabled:focus {
     background: ${tiffany};
     color: ${jetBlack};
+  }
+  :disabled {
+    color: ${darkGrey};
+    cursor: not-allowed;
   }
 `
 

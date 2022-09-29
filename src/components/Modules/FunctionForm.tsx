@@ -4,6 +4,7 @@ import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { useLoading } from 'src/hooks/useLoading'
 import { convert } from 'src/utils/converter'
 import { Code, FormButton } from '../common'
+import { InvalidChainWarning } from '../parts/Message'
 import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
 
 const NUMBER_TYPE_REGEX = /u(8|16|32|64|128)/
@@ -21,10 +22,12 @@ export type FormData = {
 
 type FunctionFormProps = {
   fn: Types.MoveFunction
+  validChainId?: number
   onSubmit?: (data: FormData) => Promise<FunctionResult>
 }
 export const FunctionForm: FC<FunctionFormProps> = ({
   fn: { name, generic_type_params, params },
+  validChainId,
   onSubmit,
 }) => {
   const [result, setResult] = useState<any>()
@@ -60,12 +63,15 @@ export const FunctionForm: FC<FunctionFormProps> = ({
               <ParamInput key={idx} param={param} idx={idx} />
             ))}
           <SubmitDiv>
+            {validChainId && <InvalidChainWarning chainId={validChainId} />}
             {result && (
               <FormButton type="button" onClick={() => setResult(undefined)}>
                 Clear
               </FormButton>
             )}
-            <FormButton disabled={!onSubmit}>Call</FormButton>
+            <FormButton disabled={!onSubmit || validChainId != null}>
+              Call
+            </FormButton>
           </SubmitDiv>
         </form>
       </FormProvider>

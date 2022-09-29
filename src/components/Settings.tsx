@@ -21,6 +21,7 @@ import { getNodeUrls } from 'src/utils/chain'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
 import { InputWithDatalist } from './parts/Input'
+import { InvalidChainWarning } from './parts/Message'
 
 export const Settings: FC = () => {
   const { account, chainId, signer, connect } = useWallet()
@@ -41,18 +42,18 @@ export const Settings: FC = () => {
       <FormProvider {...methods}>
         <div>
           <span>Signer</span>
-          {account && <code>{account}</code>}
-          {chainId && (
-            <code>{`Chain ID: ${chainId} (${
-              CHAIN_INFO[chainId]?.name || 'Unknown'
-            })`}</code>
+          {account && (
+            <code>
+              {account}
+              {chainId != null &&
+                `\nChain ID: ${chainId} (${
+                  CHAIN_INFO[chainId]?.name || 'Unknown'
+                })`}
+            </code>
           )}
-          {values.chainId &&
-            chainId &&
-            values.chainId != chainId &&
-            `You need to change the chain of your wallet to ${
-              values.chainId
-            } (${CHAIN_INFO[values.chainId]?.name}).`}
+          {values.chainId && chainId && values.chainId != chainId && (
+            <InvalidChainWarning chainId={values.chainId} />
+          )}
           <WalletsDiv>
             {Object.keys(WALLET_INFO).map((key) => {
               const { imageSrc, label } = WALLET_INFO[key as WalletType]
@@ -194,5 +195,6 @@ const Section = styled.section`
     padding: 12px 16px;
     background: ${trueBlack};
     font-size: 14px;
+    white-space: pre-wrap;
   }
 `

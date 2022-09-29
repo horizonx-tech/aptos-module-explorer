@@ -19,11 +19,15 @@ type ModulesProps = {
   modules: Types.MoveModule[]
 }
 export const Modules: FC<ModulesProps> = ({ modules }) => {
-  const { signer } = useWallet()
+  const { signer, chainId } = useWallet()
   const {
-    values: { moduleName },
+    values: { moduleName, chainId: moduleChainId },
     updateValues,
   } = useSettings()
+  const validChainId =
+    moduleChainId && chainId && moduleChainId !== chainId
+      ? moduleChainId
+      : undefined
   const { client } = useAptosClient()
   const [word, setWord] = useState(moduleName)
   const [hideNoFunctions, toggleHideNoFunctions] = useToggle(true)
@@ -88,6 +92,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                     <FunctionForm
                       key={fn.name}
                       fn={fn}
+                      validChainId={validChainId}
                       onSubmit={
                         signer && client
                           ? async (data) => {
