@@ -104,8 +104,20 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                                 arguments: data.arguments,
                               }
                               try {
+                                const { gas_estimate } =
+                                  await client.estimateGasPrice()
+                                const maxGasAmount =
+                                  await client.estimateMaxGasAmount(
+                                    module.address,
+                                  )
                                 const txHash =
-                                  await signer.signAndSubmitTransaction(payload)
+                                  await signer.signAndSubmitTransaction(
+                                    payload,
+                                    {
+                                      max_gas_amount: maxGasAmount.toString(),
+                                      gas_unit_price: `${gas_estimate}`,
+                                    },
+                                  )
                                 const tx = await client.getTransactionByHash(
                                   txHash,
                                 )
