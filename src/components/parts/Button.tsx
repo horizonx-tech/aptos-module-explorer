@@ -45,6 +45,7 @@ export const Toggle: FC<{
 }> = ({ isActive, activeColor, onClick, children }) => {
   return (
     <ToggleButton
+      type="button"
       $isActive={isActive}
       $activeColor={activeColor}
       onClick={onClick}

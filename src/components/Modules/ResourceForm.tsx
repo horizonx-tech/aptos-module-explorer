@@ -3,7 +3,7 @@ import { FC, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { shortenInnerAddress } from 'src/utils/address'
 import { Code, FormButton } from '../common'
-import { FormContainer, InputRow, InputWrapper } from './common'
+import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
 
 type ResourceFormData = {
   account: string
@@ -48,8 +48,10 @@ export const ResourceForm: FC<ResourceFormProps> = ({
           <InputWrapper label="account">
             <InputRow>
               <input {...methods.register('account')} />
-              <FormButton disabled={!getAccountResources}>Call</FormButton>
             </InputRow>
+            <SubmitDiv>
+              <FormButton>Call</FormButton>
+            </SubmitDiv>
           </InputWrapper>
         </form>
       </FormProvider>

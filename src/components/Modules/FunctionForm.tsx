@@ -1,13 +1,11 @@
 import { Types } from 'aptos'
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { FormProvider, useForm, useFormContext } from 'react-hook-form'
 import { useLoading } from 'src/hooks/useLoading'
-import { convert } from 'src/utils/converter'
 import { Code, FormButton } from '../common'
+import { Toggle } from '../parts/Button'
 import { InvalidChainWarning } from '../parts/Message'
 import { FormContainer, InputRow, InputWrapper, SubmitDiv } from './common'
-
-const NUMBER_TYPE_REGEX = /u(8|16|32|64|128)/
 
 export type FunctionResult =
   | { tx: Types.Transaction }
@@ -93,11 +91,11 @@ const ParamInput: FC<ParamInputProps> = ({ param, idx }) => {
       {isVector ? (
         Array.from(new Array(inputLength)).map((_, inputIdx) => (
           <InputRow key={inputIdx}>
-            <input
-              {...register(`arguments.${idx}.${inputIdx}`, {
-                valueAsNumber: NUMBER_TYPE_REGEX.test(param),
-              })}
-            />
+            {param === 'bool' ? (
+              <FormToggle name={`arguments.${idx}.${inputIdx}`} />
+            ) : (
+              <input {...register(`arguments.${idx}.${inputIdx}`)} />
+            )}
             {inputIdx === 0 ? (
               <FormButton
                 onClick={() => {
@@ -122,17 +120,27 @@ const ParamInput: FC<ParamInputProps> = ({ param, idx }) => {
         ))
       ) : (
         <InputRow>
-          <input
-            {...register(`arguments.${idx}`, {
-              setValueAs: (value) => convert(value, param),
-            })}
-          />
+          {param === 'bool' ? (
+            <FormToggle name={`arguments.${idx}`} />
+          ) : (
+            <input {...register(`arguments.${idx}`)} />
+          )}
           <div />
         </InputRow>
       )}
     </InputWrapper>
   )
 }
+
+const FormToggle: FC<{ name: string }> = ({ name }) => {
+  const { register, watch, setValue } = useFormContext()
+  const checked = watch(name)
+  useEffect(() => {
+    register(name)
+  }, [register])
+  return <Toggle isActive={checked} onClick={() => setValue(name, !checked)} />
+}
+
 const TypeParamInput: FC<{ length: number }> = ({ length }) => {
   const { register } = useFormContext<FormData>()
   return (
