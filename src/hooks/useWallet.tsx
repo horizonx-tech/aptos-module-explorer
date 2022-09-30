@@ -1,5 +1,6 @@
 import {
   connect as connectWallet,
+  ERRORS,
   lastConnectedWalletType,
   WalletInterface,
   WalletType,
@@ -44,14 +45,15 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
   const [chainId, setChainId] = useState<number>()
 
   const connect = async (type: WalletType) => {
-    const client = await connectWallet(type).catch(() => {
-      window.open(WALLET_INFO[type].url, '_blank', 'noopener')
+    const client = await connectWallet(type).catch((e) => {
+      if (e === ERRORS.NOT_INSTALLED)
+        window.open(WALLET_INFO[type].url, '_blank', 'noopener')
       return undefined
     })
     if (!client) return
     const [connectedAccount, connectedChainId] = await Promise.all([
-      client?.account(),
-      client?.chainId().catch(() => undefined),
+      client.account(),
+      client.chainId().catch(() => undefined),
     ])
     setClient(client)
     setAccount(connectedAccount)
@@ -68,8 +70,23 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     if (!client) return
-    if (client.onAccountChanged) client.onAccountChanged(setAccount)
-    if (client.onChainChanged) client.onChainChanged(setChainId)
+    const removeListeners: VoidFunction[] = []
+    if (client.onAccountChanged) {
+      const removeListener = client.onAccountChanged(async (account) => {
+        if (account) return setAccount(account)
+        client.connect().then(setAccount, disconnect)
+      })
+      removeListeners.push(removeListener)
+    }
+    if (client.onNetworkChanged) {
+      const removeListener = client.onNetworkChanged(({ chainId }) =>
+        setChainId(chainId),
+      )
+      removeListeners.push(removeListener)
+    }
+    return () => {
+      removeListeners.forEach((removeListener) => removeListener())
+    }
   }, [client])
 
   useEffect(() => {
