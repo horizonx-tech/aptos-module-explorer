@@ -118,9 +118,10 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                                       gas_unit_price: `${gas_estimate}`,
                                     },
                                   )
-                                const tx = await client.getTransactionByHash(
-                                  txHash,
-                                )
+                                const tx =
+                                  await client.waitForTransactionWithResult(
+                                    txHash,
+                                  )
                                 return { tx }
                               } catch (error) {
                                 return { error, payload }
