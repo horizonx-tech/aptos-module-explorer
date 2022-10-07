@@ -28,7 +28,7 @@ const StyledHeader = styled.header`
   width: 100%;
   max-width: 1200px;
   padding: 0 16px 0;
-  margin: 36px auto;
+  margin: 36px auto 0;
   svg {
     height: 32px;
     width: fit-content;

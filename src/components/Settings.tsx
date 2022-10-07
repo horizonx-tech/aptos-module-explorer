@@ -101,6 +101,22 @@ export const Settings: FC = () => {
           </InputDiv>
         </label>
         <label>
+          <span>Account</span>
+          {values.account && <code>{values.account}</code>}
+          <InputDiv>
+            <input {...methods.register('account')} />
+            <button
+              disabled={!values.nodeUrl}
+              onClick={() => {
+                updateValues({ account: methods.getValues('account') })
+                methods.setValue('account', '')
+              }}
+            >
+              Load
+            </button>
+          </InputDiv>
+        </label>
+        <label>
           <span>Node URL</span>
           {values.nodeUrl && <code>{values.nodeUrl}</code>}
           <InputDiv>
@@ -117,22 +133,6 @@ export const Settings: FC = () => {
               }}
             >
               Apply
-            </button>
-          </InputDiv>
-        </label>
-        <label>
-          <span>Account</span>
-          {values.account && <code>{values.account}</code>}
-          <InputDiv>
-            <input {...methods.register('account')} />
-            <button
-              disabled={!values.nodeUrl}
-              onClick={() => {
-                updateValues({ account: methods.getValues('account') })
-                methods.setValue('account', '')
-              }}
-            >
-              Load
             </button>
           </InputDiv>
         </label>

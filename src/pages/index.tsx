@@ -1,6 +1,7 @@
 import { Types } from 'aptos'
 import type { NextPage } from 'next'
 import { useCallback, useEffect, useState } from 'react'
+import { ExternalLink } from 'src/components/elements/Link'
 import { Modules } from 'src/components/Modules'
 import { Footer } from 'src/components/parts/Footer'
 import { Header } from 'src/components/parts/Header'
@@ -9,8 +10,8 @@ import { Settings } from 'src/components/Settings'
 import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useLoading } from 'src/hooks/useLoading'
 import { useSettings } from 'src/hooks/useSettings'
-import { tiffany } from 'src/styles/colors'
-import { fontWeightBold } from 'src/styles/fonts'
+import { darkBlack, spaceGrey, tiffany } from 'src/styles/colors'
+import { fontWeightBold, fontWeightRegular } from 'src/styles/fonts'
 import { notFalsy } from 'src/utils/filter'
 import styled from 'styled-components'
 
@@ -54,6 +55,14 @@ const Home: NextPage = () => {
       <Header />
       <Main>
         <h1>Aptos Module/Resource Explorer</h1>
+        <p>
+          {`After filling the forms for Chain ID and Account, you will find GUI of modules, where you can explore modules and test them.\nGUI of modules can be easily shared with your team via URLs. For more information, `}
+          <ExternalLink href="https://github.com/horizonx-tech/aptos-module-explorer#readme">
+            click here
+          </ExternalLink>
+          .
+        </p>
+        <hr />
         <Settings />
         {modules && modules.length > 0 && <Modules modules={modules} />}
         {resources && resources.length > 0 && (
@@ -74,7 +83,7 @@ const Main = styled.main`
   h1 {
     font-size: 48px;
     font-weight: ${fontWeightBold};
-    margin-bottom: 64px;
+    margin-bottom: 32px;
   }
   h2 {
     font-size: 20px;
@@ -83,6 +92,22 @@ const Main = styled.main`
   }
   h3 {
     font-size: 16px;
+  }
+  > p {
+    font-size: 16px;
+    font-weight: ${fontWeightRegular};
+    color: ${spaceGrey};
+    letter-spacing: 0.024em;
+    white-space: pre-wrap;
+  }
+  > hr {
+    width: 100%;
+    height: 1px;
+    color: ${darkBlack};
+    margin: 48px 0;
+  }
+  a {
+    color: ${tiffany}d4;
   }
   summary {
     :hover,
