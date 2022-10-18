@@ -7,13 +7,17 @@ import pontemIcon from 'public/images/icon_pontem.png'
 
 export const CHAIN_INFO: Record<number, { name: string; nodeUrls: string[] }> =
   {
-    [34]: {
-      name: 'Aptos Devnet',
-      nodeUrls: ['https://fullnode.devnet.aptoslabs.com/v1'],
+    [1]: {
+      name: 'Aptos Mainnet',
+      nodeUrls: ['https://fullnode.mainnet.aptoslabs.com/v1'],
     },
     [2]: {
       name: 'Aptos Testnet',
       nodeUrls: ['https://fullnode.testnet.aptoslabs.com/v1'],
+    },
+    [34]: {
+      name: 'Aptos Devnet',
+      nodeUrls: ['https://fullnode.devnet.aptoslabs.com/v1'],
     },
   }
 
