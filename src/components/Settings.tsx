@@ -1,6 +1,6 @@
 import { WalletType } from '@horizonx/aptos-wallet-connector'
 import Image from 'next/image'
-import { FC, useEffect } from 'react'
+import { FC } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
@@ -30,13 +30,6 @@ export const Settings: FC = () => {
   const nodeUrls = getNodeUrls(chainId)
   const methods = useForm()
 
-  useEffect(() => {
-    const targetChainId = values.chainId || chainId
-    if (targetChainId == null) return
-    const nodeUrls = getNodeUrls(targetChainId)
-    if (!nodeUrls.length) return
-    updateValues({ nodeUrl: nodeUrls[0] })
-  }, [chainId, values.chainId])
   return (
     <Section>
       <FormProvider {...methods}>
@@ -106,7 +99,7 @@ export const Settings: FC = () => {
           <InputDiv>
             <input {...methods.register('account')} />
             <button
-              disabled={!values.nodeUrl}
+              disabled={!values.chainId && !values.nodeUrl}
               onClick={() => {
                 updateValues({ account: methods.getValues('account') })
                 methods.setValue('account', '')
@@ -117,7 +110,7 @@ export const Settings: FC = () => {
           </InputDiv>
         </label>
         <label>
-          <span>Node URL</span>
+          <span>Node URL (Optional)</span>
           {values.nodeUrl && <code>{values.nodeUrl}</code>}
           <InputDiv>
             <InputWithDatalist
