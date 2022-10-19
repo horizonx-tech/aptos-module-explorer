@@ -99,7 +99,7 @@ export const Settings: FC = () => {
           <InputDiv>
             <input {...methods.register('account')} />
             <button
-              disabled={!values.chainId && !values.nodeUrl}
+              disabled={!values.chainId && !values.nodeUrl && !chainId}
               onClick={() => {
                 updateValues({ account: methods.getValues('account') })
                 methods.setValue('account', '')
