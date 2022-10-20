@@ -1,6 +1,6 @@
 import { WalletType } from '@horizonx/aptos-wallet-connector'
 import Image from 'next/image'
-import { FC, forwardRef, useCallback } from 'react'
+import { FC, forwardRef, InputHTMLAttributes, useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
@@ -77,7 +77,7 @@ export const Settings: FC = () => {
         <SettingsItem
           label="Chain ID"
           current={toChainIdDisplay(values.chainId)}
-          list={{
+          datalist={{
             listId: 'chain-ids',
             options: Object.keys(CHAIN_INFO).map((chainId) => ({
               value: chainId,
@@ -100,7 +100,7 @@ export const Settings: FC = () => {
         />
         <SettingsItem
           label="Node URL (Optional)"
-          list={{ listId: 'node-urls', options: nodeUrls }}
+          datalist={{ listId: 'node-urls', options: nodeUrls }}
           current={values.nodeUrl}
           onClick={() => update('nodeUrl')}
           {...methods.register('nodeUrl')}
@@ -121,9 +121,12 @@ type SettingsItemProps = {
   onClick: VoidFunction
   disabled?: boolean
   buttonLabel?: string
-  list?: InputWithDatalistProps
+  datalist?: InputWithDatalistProps
 }
-const SettingsItem = forwardRef<HTMLInputElement, SettingsItemProps>(
+const SettingsItem = forwardRef<
+  HTMLInputElement,
+  SettingsItemProps & InputHTMLAttributes<HTMLInputElement>
+>(
   (
     {
       label,
@@ -131,7 +134,7 @@ const SettingsItem = forwardRef<HTMLInputElement, SettingsItemProps>(
       buttonLabel = 'Apply',
       disabled,
       onClick,
-      list,
+      datalist,
       ...props
     },
     ref,
@@ -140,8 +143,8 @@ const SettingsItem = forwardRef<HTMLInputElement, SettingsItemProps>(
       <span>{label}</span>
       {current && <code>{current}</code>}
       <InputDiv>
-        {list ? (
-          <InputWithDatalist {...props} {...list} ref={ref} />
+        {datalist ? (
+          <InputWithDatalist {...props} {...datalist} ref={ref} />
         ) : (
           <input {...props} ref={ref} />
         )}
