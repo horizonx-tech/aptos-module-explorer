@@ -29,6 +29,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
       ? moduleChainId
       : undefined
   const { client } = useAptosClient()
+  const { aptosAccount } = useSettings()
   const [word, setWord] = useState(moduleName)
   const [hideNoFunctions, toggleHideNoFunctions] = useToggle(true)
   const [hideNoResources, toggleHideNoResources] = useToggle()
@@ -94,7 +95,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                       fn={fn}
                       validChainId={validChainId}
                       onSubmit={
-                        signer && client
+                        (signer || aptosAccount) && client
                           ? async (data) => {
                               const payload = {
                                 type: 'entry_function_payload',
@@ -110,9 +111,14 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                                 const maxGasAmount = 10000
                                 // await client.estimateMaxGasAmount(
                                 //   module.address,
-                                // )
+                                //
+
+                                const txSigner = aptosAccount
+                                  ? aptosAccount.signer(client)
+                                  : signer
+
                                 const txHash =
-                                  await signer.signAndSubmitTransaction(
+                                  await txSigner.signAndSubmitTransaction(
                                     payload,
                                     {
                                       max_gas_amount: maxGasAmount.toString(),

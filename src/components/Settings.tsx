@@ -18,6 +18,7 @@ import {
   fontWeightMedium,
 } from 'src/styles/fonts'
 import { getNodeUrls } from 'src/utils/chain'
+import { IS_DEV } from 'src/utils/env'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
 import { InputWithDatalist, InputWithDatalistProps } from './parts/Input'
@@ -27,11 +28,12 @@ type SettingsFormData = Partial<{
   chainId: number
   account: string
   nodeUrl: string
+  privateKeyHex: string
 }>
 
 export const Settings: FC = () => {
-  const { account, chainId, signer, connect } = useWallet()
-  const { values, updateValues } = useSettings()
+  const { account, chainId, signer, connect, disconnect } = useWallet()
+  const { values, updateValues, aptosAccount, setAptosAccount } = useSettings()
 
   const nodeUrls = getNodeUrls(chainId)
   const methods = useForm<SettingsFormData>()
@@ -47,13 +49,21 @@ export const Settings: FC = () => {
   return (
     <Section>
       <FormProvider {...methods}>
-        <div>
+        <SignerDiv>
           <span>Signer</span>
-          {account && (
+          {aptosAccount ? (
             <code>
-              {account}
-              {toChainIdDisplay(chainId)}
+              {'From Private Key: '}
+              {aptosAccount.address}
             </code>
+          ) : (
+            account && (
+              <code>
+                {[account, toChainIdDisplay(chainId)]
+                  .filter(Boolean)
+                  .join('\n')}
+              </code>
+            )
           )}
           {values.chainId && chainId && values.chainId != chainId && (
             <InvalidChainWarning chainId={values.chainId} />
@@ -63,9 +73,13 @@ export const Settings: FC = () => {
               const { imageSrc, label } = WALLET_INFO[key as WalletType]
               return (
                 <WalletButton
+                  type="button"
                   key={key}
-                  onClick={async () => connect(key as WalletType)}
-                  disabled={signer?.type === key}
+                  onClick={async () => {
+                    await connect(key as WalletType)
+                    setAptosAccount(undefined)
+                  }}
+                  disabled={!aptosAccount && signer?.type === key}
                 >
                   <Image src={imageSrc} alt={label} width={24} height={24} />
                   {label}
@@ -73,7 +87,20 @@ export const Settings: FC = () => {
               )
             })}
           </WalletsDiv>
-        </div>
+          {IS_DEV && (
+            <SettingsItem
+              label="Private Key"
+              onClick={() => {
+                setAptosAccount(methods.getValues('privateKeyHex'))
+                methods.setValue('privateKeyHex', '')
+                disconnect()
+              }}
+              type="password"
+              autoComplete="off"
+              {...methods.register('privateKeyHex')}
+            />
+          )}
+        </SignerDiv>
         <SettingsItem
           label="Chain ID"
           current={toChainIdDisplay(values.chainId)}
@@ -112,7 +139,7 @@ export const Settings: FC = () => {
 
 const toChainIdDisplay = (chainId: number | undefined) =>
   chainId != null
-    ? `\nChain ID: ${chainId} (${CHAIN_INFO[chainId]?.name || 'Unknown'})`
+    ? `Chain ID: ${chainId} (${CHAIN_INFO[chainId]?.name || 'Unknown'})`
     : undefined
 
 type SettingsItemProps = {
@@ -211,5 +238,15 @@ const Section = styled.section`
     background: ${trueBlack};
     font-size: 14px;
     white-space: pre-wrap;
+  }
+`
+
+const SignerDiv = styled.div`
+  > label {
+    margin-top: 8px;
+    > span {
+      font-size: 16px;
+      font-weight: ${fontWeightMedium};
+    }
   }
 `
