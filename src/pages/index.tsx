@@ -10,7 +10,7 @@ import { Settings } from 'src/components/Settings'
 import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useLoading } from 'src/hooks/useLoading'
 import { useSettings } from 'src/hooks/useSettings'
-import { darkBlack, spaceGrey, tiffany } from 'src/styles/colors'
+import { darkBlack, spaceGrey, tiffany, trueBlack } from 'src/styles/colors'
 import { fontWeightBold, fontWeightRegular } from 'src/styles/fonts'
 import { notFalsy } from 'src/utils/filter'
 import styled from 'styled-components'
@@ -24,24 +24,28 @@ const Home: NextPage = () => {
   const [modules, setModules] = useState<Types.MoveModule[]>([])
   const { setIsLoading } = useLoading()
   const [resources, setResources] = useState<Types.MoveResource[]>([])
+  const [moduleLoadingError, setModuleLoadingError] = useState()
+  const [resourceLoadingError, setResourceLoadingError] = useState()
 
   const refreshModules = useCallback(async () => {
     if (!client || !account) return
     setIsLoading(true)
+    setModuleLoadingError(undefined)
     return client!
       .getAccountModules(account)
       .then((modules) => {
         setModules(modules.map(({ abi }) => abi).filter(notFalsy))
-      })
+      }, setModuleLoadingError)
       .finally(() => setIsLoading(false))
   }, [client, account])
 
   const refreshResources = useCallback(async () => {
     if (!client || !account) return
     setIsLoading(true)
+    setResourceLoadingError(undefined)
     return client!
       .getAccountResources(account)
-      .then(setResources)
+      .then(setResources, setResourceLoadingError)
       .finally(() => setIsLoading(false))
   }, [client, account])
 
@@ -68,11 +72,46 @@ const Home: NextPage = () => {
         {resources && resources.length > 0 && (
           <Resources resources={resources} refresh={refreshResources} />
         )}
+        <Errors>
+          {moduleLoadingError && (
+            <div>
+              <p>Error occured on loading modules:</p>
+              <code>{JSON.stringify(moduleLoadingError)}</code>
+            </div>
+          )}
+          {resourceLoadingError && (
+            <div>
+              <p>Error occured on loading resources:</p>
+              <code>{JSON.stringify(resourceLoadingError)}</code>
+            </div>
+          )}
+        </Errors>
       </Main>
       <Footer />
     </>
   )
 }
+
+const Errors = styled.div`
+  margin-top: 64px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+  > div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
+    p {
+      font-size: 16px;
+    }
+    code {
+      padding: 12px 16px;
+      background: ${trueBlack};
+      font-size: 14px;
+      white-space: pre-wrap;
+    }
+  }
+`
 
 const Main = styled.main`
   width: 100%;
