@@ -118,7 +118,7 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
                                   : signer
 
                                 const txHash =
-                                  await txSigner.signAndSubmitTransaction(
+                                  await txSigner!.signAndSubmitTransaction(
                                     payload,
                                     {
                                       max_gas_amount: maxGasAmount.toString(),
