@@ -1,13 +1,13 @@
 import { forwardRef, InputHTMLAttributes } from 'react'
 
-type InputWithDatalist = {
+export type InputWithDatalistProps = {
   listId: string
   options: (string | { value: string; label?: string })[]
-} & InputHTMLAttributes<HTMLInputElement>
+}
 
 export const InputWithDatalist = forwardRef<
   HTMLInputElement,
-  InputWithDatalist
+  InputWithDatalistProps & InputHTMLAttributes<HTMLInputElement>
 >(({ listId, options, ...props }, ref) => (
   <>
     <input {...props} ref={ref} list={listId} />

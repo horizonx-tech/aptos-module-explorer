@@ -1,6 +1,6 @@
 import { WalletType } from '@horizonx/aptos-wallet-connector'
 import Image from 'next/image'
-import { FC } from 'react'
+import { FC, forwardRef, useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
@@ -20,15 +20,29 @@ import {
 import { getNodeUrls } from 'src/utils/chain'
 import styled from 'styled-components'
 import { WalletButton } from './parts/Button'
-import { InputWithDatalist } from './parts/Input'
+import { InputWithDatalist, InputWithDatalistProps } from './parts/Input'
 import { InvalidChainWarning } from './parts/Message'
+
+type SettingsFormData = Partial<{
+  chainId: number
+  account: string
+  nodeUrl: string
+}>
 
 export const Settings: FC = () => {
   const { account, chainId, signer, connect } = useWallet()
   const { values, updateValues } = useSettings()
 
   const nodeUrls = getNodeUrls(chainId)
-  const methods = useForm()
+  const methods = useForm<SettingsFormData>()
+
+  const update = useCallback(
+    (key: keyof SettingsFormData) => {
+      updateValues({ [key]: methods.getValues(key) })
+      methods.setValue(key, '')
+    },
+    [methods, updateValues],
+  )
 
   return (
     <Section>
@@ -38,10 +52,7 @@ export const Settings: FC = () => {
           {account && (
             <code>
               {account}
-              {chainId != null &&
-                `\nChain ID: ${chainId} (${
-                  CHAIN_INFO[chainId]?.name || 'Unknown'
-                })`}
+              {toChainIdDisplay(chainId)}
             </code>
           )}
           {values.chainId && chainId && values.chainId != chainId && (
@@ -63,76 +74,84 @@ export const Settings: FC = () => {
             })}
           </WalletsDiv>
         </div>
-        <label>
-          <span>Chain ID</span>
-          {values.chainId && (
-            <code>{`Chain ID: ${values.chainId} (${
-              CHAIN_INFO[values.chainId]?.name || 'Unknown'
-            })`}</code>
-          )}
-          <InputDiv>
-            <InputWithDatalist
-              listId="chain-ids"
-              options={Object.keys(CHAIN_INFO).map((chainId) => ({
-                value: chainId,
-                label: `${CHAIN_INFO[+chainId].name} (ChainId: ${chainId})`,
-              }))}
-              {...methods.register('chainId', {
-                setValueAs: (val) =>
-                  !val || Number.isNaN(+val) ? undefined : +val,
-              })}
-            />
-            <button
-              onClick={() => {
-                const newChainId = methods.getValues('chainId')
-                updateValues({ chainId: newChainId })
-                methods.setValue('chainId', '')
-              }}
-            >
-              Apply
-            </button>
-          </InputDiv>
-        </label>
-        <label>
-          <span>Account</span>
-          {values.account && <code>{values.account}</code>}
-          <InputDiv>
-            <input {...methods.register('account')} />
-            <button
-              disabled={!values.chainId && !values.nodeUrl && !chainId}
-              onClick={() => {
-                updateValues({ account: methods.getValues('account') })
-                methods.setValue('account', '')
-              }}
-            >
-              Load
-            </button>
-          </InputDiv>
-        </label>
-        <label>
-          <span>Node URL (Optional)</span>
-          {values.nodeUrl && <code>{values.nodeUrl}</code>}
-          <InputDiv>
-            <InputWithDatalist
-              options={nodeUrls}
-              listId="node-urls"
-              {...methods.register('nodeUrl')}
-            />
-            <button
-              onClick={() => {
-                const newNodeUrl = methods.getValues('nodeUrl')
-                updateValues({ nodeUrl: newNodeUrl })
-                methods.setValue('nodeUrl', '')
-              }}
-            >
-              Apply
-            </button>
-          </InputDiv>
-        </label>
+        <SettingsItem
+          label="Chain ID"
+          current={toChainIdDisplay(values.chainId)}
+          list={{
+            listId: 'chain-ids',
+            options: Object.keys(CHAIN_INFO).map((chainId) => ({
+              value: chainId,
+              label: `${CHAIN_INFO[+chainId].name} (ChainId: ${chainId})`,
+            })),
+          }}
+          onClick={() => update('chainId')}
+          {...methods.register('chainId', {
+            setValueAs: (val) =>
+              !val || Number.isNaN(+val) ? undefined : +val,
+          })}
+        />
+        <SettingsItem
+          label="Account"
+          current={values.account}
+          buttonLabel="Load"
+          disabled={!values.chainId && !values.nodeUrl && !chainId}
+          onClick={() => update('account')}
+          {...methods.register('account')}
+        />
+        <SettingsItem
+          label="Node URL (Optional)"
+          list={{ listId: 'node-urls', options: nodeUrls }}
+          current={values.nodeUrl}
+          onClick={() => update('nodeUrl')}
+          {...methods.register('nodeUrl')}
+        />
       </FormProvider>
     </Section>
   )
 }
+
+const toChainIdDisplay = (chainId: number | undefined) =>
+  chainId != null
+    ? `\nChain ID: ${chainId} (${CHAIN_INFO[chainId]?.name || 'Unknown'})`
+    : undefined
+
+type SettingsItemProps = {
+  label: string
+  current?: string
+  onClick: VoidFunction
+  disabled?: boolean
+  buttonLabel?: string
+  list?: InputWithDatalistProps
+}
+const SettingsItem = forwardRef<HTMLInputElement, SettingsItemProps>(
+  (
+    {
+      label,
+      current,
+      buttonLabel = 'Apply',
+      disabled,
+      onClick,
+      list,
+      ...props
+    },
+    ref,
+  ) => (
+    <label>
+      <span>{label}</span>
+      {current && <code>{current}</code>}
+      <InputDiv>
+        {list ? (
+          <InputWithDatalist {...props} {...list} ref={ref} />
+        ) : (
+          <input {...props} ref={ref} />
+        )}
+        <button disabled={disabled} onClick={onClick}>
+          {buttonLabel}
+        </button>
+      </InputDiv>
+    </label>
+  ),
+)
 
 const WalletsDiv = styled.div``
 
