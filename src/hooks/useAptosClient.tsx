@@ -2,6 +2,7 @@ import { AptosClient } from 'aptos'
 import { createContext, FC, ReactNode, useContext, useMemo } from 'react'
 import { getNodeUrls } from 'src/utils/chain'
 import { useSettings } from './useSettings'
+import { useWallet } from './useWallet'
 
 export const useAptosClient = () => useContext(AptosClientContext)
 
@@ -14,6 +15,7 @@ const AptosClientContext = createContext<AptosClientContextInterface>({})
 export const AptosClientContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { chainId: walletChainId } = useWallet()
   const {
     values: { chainId, nodeUrl },
   } = useSettings()
@@ -21,8 +23,8 @@ export const AptosClientContextProvider: FC<{ children: ReactNode }> = ({
     () =>
       nodeUrl
         ? new AptosClient(nodeUrl)
-        : new AptosClient(getNodeUrls(chainId)[0]),
-    [nodeUrl, chainId],
+        : new AptosClient(getNodeUrls(walletChainId || chainId)[0]),
+    [walletChainId, nodeUrl, chainId],
   )
   return (
     <AptosClientContext.Provider value={{ client }}>
