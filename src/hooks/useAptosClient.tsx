@@ -19,13 +19,12 @@ export const AptosClientContextProvider: FC<{ children: ReactNode }> = ({
     values: { chainId, nodeUrl },
   } = useSettings()
   const { chainId: walletChainId } = useWallet()
-  const client = useMemo(
-    () =>
-      nodeUrl
-        ? new AptosClient(nodeUrl)
-        : new AptosClient(getNodeUrls(chainId || walletChainId)[0]),
-    [nodeUrl, chainId, walletChainId],
-  )
+  const client = useMemo(() => {
+    if (nodeUrl) return new AptosClient(nodeUrl)
+    const defaultNodeURL = getNodeUrls(chainId || walletChainId)[0]
+    if (defaultNodeURL) return new AptosClient(defaultNodeURL)
+    return undefined
+  }, [nodeUrl, chainId, walletChainId])
   return (
     <AptosClientContext.Provider value={{ client }}>
       {children}

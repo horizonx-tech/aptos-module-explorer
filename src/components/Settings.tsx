@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { FC, forwardRef, InputHTMLAttributes, useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
+import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useSettings } from 'src/hooks/useSettings'
 import { SupportedWalletType, useWallet } from 'src/hooks/useWallet'
 import {
@@ -33,6 +34,7 @@ type SettingsFormData = Partial<{
 export const Settings: FC = () => {
   const { account, chainId, signer, connect, disconnect } = useWallet()
   const { values, updateValues, aptosAccount, setAptosAccount } = useSettings()
+  const { client } = useAptosClient()
 
   const nodeUrls = getNodeUrls(chainId)
   const methods = useForm<SettingsFormData>()
@@ -121,12 +123,12 @@ export const Settings: FC = () => {
           label="Account"
           current={values.account}
           buttonLabel="Load"
-          disabled={!values.chainId && !values.nodeUrl && !chainId}
+          disabled={!client}
           onClick={() => update('account')}
           {...methods.register('account')}
         />
         <SettingsItem
-          label="Node URL (Optional)"
+          label={client ? 'Node URL (Optional)' : 'Node URL'}
           datalist={{ listId: 'node-urls', options: nodeUrls }}
           current={values.nodeUrl}
           onClick={() => update('nodeUrl')}
