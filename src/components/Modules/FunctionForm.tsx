@@ -137,6 +137,7 @@ const FormToggle: FC<{ name: string }> = ({ name }) => {
   const checked = watch(name)
   useEffect(() => {
     register(name)
+    setValue(name, false)
   }, [register])
   return <Toggle isActive={checked} onClick={() => setValue(name, !checked)} />
 }
