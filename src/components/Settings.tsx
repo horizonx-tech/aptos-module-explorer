@@ -1,10 +1,9 @@
-import { WalletType } from '@horizonx/aptos-wallet-connector'
 import Image from 'next/image'
 import { FC, forwardRef, InputHTMLAttributes, useCallback } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { CHAIN_INFO, WALLET_INFO } from 'src/constants'
 import { useSettings } from 'src/hooks/useSettings'
-import { useWallet } from 'src/hooks/useWallet'
+import { SupportedWalletType, useWallet } from 'src/hooks/useWallet'
 import {
   darkGrey,
   jetBlack,
@@ -59,7 +58,7 @@ export const Settings: FC = () => {
           ) : (
             account && (
               <code>
-                {[account, toChainIdDisplay(chainId)]
+                {[account.address, toChainIdDisplay(chainId)]
                   .filter(Boolean)
                   .join('\n')}
               </code>
@@ -70,13 +69,14 @@ export const Settings: FC = () => {
           )}
           <WalletsDiv>
             {Object.keys(WALLET_INFO).map((key) => {
-              const { imageSrc, label } = WALLET_INFO[key as WalletType]
+              const { imageSrc, label } =
+                WALLET_INFO[key as SupportedWalletType]
               return (
                 <WalletButton
                   type="button"
                   key={key}
                   onClick={async () => {
-                    await connect(key as WalletType)
+                    await connect(key as SupportedWalletType)
                     setAptosAccount(undefined)
                   }}
                   disabled={!aptosAccount && signer?.type === key}

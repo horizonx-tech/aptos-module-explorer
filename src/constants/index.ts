@@ -1,9 +1,9 @@
-import { WalletType } from '@horizonx/aptos-wallet-connector'
 import { StaticImageData } from 'next/image'
 import fewchaIcon from 'public/images/icon_fewcha.png'
 import martianIcon from 'public/images/icon_martian.png'
 import petraIcon from 'public/images/icon_petra.png'
 import pontemIcon from 'public/images/icon_pontem.png'
+import { SupportedWalletType } from 'src/hooks/useWallet'
 
 export const CHAIN_INFO: Record<number, { name: string; nodeUrls: string[] }> =
   {
@@ -26,7 +26,7 @@ export const PUBLIC_NODE_URLS = Object.values(CHAIN_INFO).flatMap(
 )
 
 export const WALLET_INFO: Record<
-  WalletType,
+  SupportedWalletType,
   {
     url: string
     label: string

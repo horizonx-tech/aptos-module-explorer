@@ -10,8 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@horizonx/aptos-wallet-connector": "^0.10.1",
-    "aptos": "^1.3.14",
+    "@horizonx/aptos-wallet-connector": "^0.12.1",
+    "aptos": "^1.3.16",
     "next": "12.2.5",
     "querystring": "^0.2.1",
     "react": "18.2.0",

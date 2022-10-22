@@ -3,8 +3,8 @@ import {
   ERRORS,
   lastConnectedWalletType,
   WalletInterface,
-  WalletType,
 } from '@horizonx/aptos-wallet-connector'
+import { Account } from '@horizonx/aptos-wallet-connector/dist/wallets'
 import {
   createContext,
   FC,
@@ -17,18 +17,24 @@ import { WALLET_INFO } from 'src/constants'
 
 export const useWallet = () => useContext(WalletContext)
 
+const SUPPORTED_WALLETS = ['aptos', 'martian', 'pontem', 'fewcha'] as const
+export type SupportedWalletType = typeof SUPPORTED_WALLETS[number]
+
+const isSupportedWallet = (arg: any): arg is SupportedWalletType =>
+  SUPPORTED_WALLETS.includes(arg)
+
 type WalletContextInterface = {
-  connect: (type: WalletType) => Promise<
+  connect: (type: SupportedWalletType) => Promise<
     | {
-        client: WalletInterface<WalletType>
-        account: string | undefined
+        client: WalletInterface<SupportedWalletType>
+        account: Account | undefined
         chainId: number | undefined
       }
     | undefined
   >
   disconnect: VoidFunction
   signer?: WalletInterface
-  account?: string
+  account?: Account
   chainId?: number
 }
 
@@ -41,10 +47,10 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [client, setClient] = useState<WalletInterface>()
-  const [account, setAccount] = useState<string>()
+  const [account, setAccount] = useState<Account>()
   const [chainId, setChainId] = useState<number>()
 
-  const connect = async (type: WalletType) => {
+  const connect = async (type: SupportedWalletType) => {
     const client = await connectWallet(type).catch((e) => {
       if (e === ERRORS.NOT_INSTALLED)
         window.open(WALLET_INFO[type].url, '_blank', 'noopener')
@@ -91,7 +97,7 @@ export const WalletContextProvider: FC<{ children: ReactNode }> = ({
 
   useEffect(() => {
     const type = lastConnectedWalletType()
-    if (type) connect(type)
+    if (isSupportedWallet(type)) connect(type)
   }, [])
 
   return (
