@@ -3,8 +3,7 @@ import SearchIcon from 'public/svgs/icon_search.svg'
 import { FC, useMemo, useState } from 'react'
 import { useToggle } from 'src/hooks/useToggle'
 import { shortenInnerAddress } from 'src/utils/address'
-import styled from 'styled-components'
-import { Code, Control, FormButton, InputDiv, Section } from './common'
+import { Code, Control, Details, FormButton, InputDiv, Section } from './common'
 import { Toggle } from './parts/Button'
 import { CollapsableDiv } from './parts/CollapsableSection'
 import { InputWithDatalist } from './parts/Input'
@@ -17,7 +16,7 @@ export const Resources: FC<{
   const [word, setWord] = useState('')
   const moduleIds = Object.keys(items)
   return (
-    <ResourcesSection>
+    <Section>
       <h2>Resources</h2>
       <Control>
         <InputDiv>
@@ -54,7 +53,7 @@ export const Resources: FC<{
             </CollapsableDiv>
           )
         })}
-    </ResourcesSection>
+    </Section>
   )
 }
 
@@ -66,7 +65,7 @@ const StructResources: FC<{
   const [word, setWord] = useState('')
   const [ellipsizeAddress, toggleEllipsizeAddress] = useToggle(true)
   return (
-    <details key={name}>
+    <Details key={name}>
       <summary>{name}</summary>
       <Control>
         <InputDiv>
@@ -100,7 +99,7 @@ const StructResources: FC<{
           2,
         )}
       </Code>
-    </details>
+    </Details>
   )
 }
 
@@ -122,14 +121,3 @@ const categorize = (resources: Types.MoveResource[]) =>
     else item[structName] = [resource]
     return res
   }, {})
-
-const ResourcesSection = styled(Section)`
-  details {
-    ${Control} {
-      margin-top: 24px;
-    }
-    ${Code} {
-      margin-top: 16px;
-    }
-  }
-`

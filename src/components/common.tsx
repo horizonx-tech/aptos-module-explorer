@@ -62,3 +62,12 @@ export const Section = styled.section`
     margin-top: 4px;
   }
 `
+
+export const Details = styled.details`
+  ${Control} {
+    margin-top: 24px;
+  }
+  ${Code} {
+    margin-top: 16px;
+  }
+`
