@@ -5,21 +5,18 @@ import { useAptosClient } from 'src/hooks/useAptosClient'
 import { useSettings } from 'src/hooks/useSettings'
 import { useToggle } from 'src/hooks/useToggle'
 import { useWallet } from 'src/hooks/useWallet'
-import { isEventHandle, isResource, notFalsy } from 'src/utils/filter'
-import styled from 'styled-components'
+import { isResource, notFalsy } from 'src/utils/filter'
+import { estimateGas } from 'src/utils/transaction'
 import { Control, InputDiv, Section } from '../common'
 import { Toggle } from '../parts/Button'
-import { CollapsableDiv } from '../parts/CollapsableSection'
 import { InputWithDatalist } from '../parts/Input'
-import { EventsForm } from './EventsForm'
-import { FunctionForm } from './FunctionForm'
-import { ResourceForm } from './ResourceForm'
+import { Module } from './Module'
 
 type ModulesProps = {
   modules: Types.MoveModule[]
 }
 export const Modules: FC<ModulesProps> = ({ modules }) => {
-  const { signer, chainId } = useWallet()
+  const { signer, chainId, account } = useWallet()
   const {
     values: { moduleName, chainId: moduleChainId },
     updateValues,
@@ -28,11 +25,13 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
     moduleChainId && chainId && moduleChainId !== chainId
       ? moduleChainId
       : undefined
+
   const { client } = useAptosClient()
   const { aptosAccount } = useSettings()
   const [word, setWord] = useState(moduleName)
   const [hideNoFunctions, toggleHideNoFunctions] = useToggle(true)
   const [hideNoResources, toggleHideNoResources] = useToggle()
+
   const filteredModules = modules.filter((module) => {
     const entryFunctions = module.exposed_functions.filter(
       ({ is_entry }) => is_entry,
@@ -42,6 +41,9 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
     if (resources.length === 0 && hideNoResources) return false
     return true
   })
+
+  const sender = account || aptosAccount
+  const txSigner = client && aptosAccount ? aptosAccount.signer(client) : signer
 
   return (
     <Section>
@@ -69,142 +71,44 @@ export const Modules: FC<ModulesProps> = ({ modules }) => {
       </Control>
       {filteredModules
         .filter(({ name }) => !word || name.includes(word))
-        .map((module) => {
-          const entryFunctions = module.exposed_functions.filter(
-            ({ is_entry }) => is_entry,
-          )
-          const resources = module.structs.filter(isResource)
-          const moduleId = `${module.address}::${module.name}`
-          const events = resources.flatMap(({ name, fields }) =>
-            fields.filter(isEventHandle).map(({ name: fieldName }) => ({
-              eventHandle: `${moduleId}::${name}`,
-              fieldName,
-            })),
-          )
-          return (
-            <CollapsableDiv
-              key={module.name}
-              summary={`${module.name} (${entryFunctions.length} entry functions, ${resources.length} resources, ${events.length} events)`}
-            >
-              {entryFunctions.length > 0 && (
-                <Functions>
-                  <summary>Functions</summary>
-                  {entryFunctions.map((fn) => (
-                    <FunctionForm
-                      key={fn.name}
-                      fn={fn}
-                      validChainId={validChainId}
-                      onSubmit={
-                        (signer || aptosAccount) && client
-                          ? async (data) => {
-                              const payload = {
-                                type: 'entry_function_payload',
-                                function: `${moduleId}::${fn.name}`,
-                                type_arguments:
-                                  data.type_arguments.filter(notFalsy),
-                                arguments: data.arguments,
-                              }
-                              try {
-                                const { gas_estimate } =
-                                  await client.estimateGasPrice()
-                                // TODO
-                                const maxGasAmount = 10000
-                                // await client.estimateMaxGasAmount(
-                                //   module.address,
-                                //
-
-                                const txSigner = aptosAccount
-                                  ? aptosAccount.signer(client)
-                                  : signer
-
-                                const txHash =
-                                  await txSigner!.signAndSubmitTransaction(
-                                    payload,
-                                    {
-                                      max_gas_amount: maxGasAmount.toString(),
-                                      gas_unit_price: `${gas_estimate}`,
-                                    },
-                                  )
-                                const tx =
-                                  await client.waitForTransactionWithResult(
-                                    txHash,
-                                  )
-                                return { tx }
-                              } catch (error) {
-                                return { error, payload }
-                              }
-                            }
-                          : undefined
-                      }
-                    />
-                  ))}
-                </Functions>
-              )}
-              {resources.length > 0 && (
-                <Structs>
-                  <summary>Resources</summary>
-                  {resources.map((struct) => (
-                    <ResourceForm
-                      key={struct.name}
-                      moduleId={moduleId}
-                      resource={struct}
-                      getAccountResources={
-                        client
-                          ? (...args) => client.getAccountResources(...args)
-                          : undefined
-                      }
-                    />
-                  ))}
-                </Structs>
-              )}
-              {events.length > 0 && (
-                <Structs>
-                  <summary>Events</summary>
-                  {events.map(({ fieldName, eventHandle }) => (
-                    <EventsForm
-                      key={fieldName}
-                      event={{ eventHandle, fieldName }}
-                      getEventsByEventHandle={
-                        client
-                          ? (...args) => client.getEventsByEventHandle(...args)
-                          : undefined
-                      }
-                    />
-                  ))}
-                </Structs>
-              )}
-            </CollapsableDiv>
-          )
-        })}
+        .map((module) => (
+          <Module
+            key={module.name}
+            module={module}
+            validChainId={validChainId}
+            client={client}
+            callFunction={
+              txSigner && sender && client
+                ? async (moduleId, functionName, data) => {
+                    const payload = {
+                      type: 'entry_function_payload',
+                      function: `${moduleId}::${functionName}`,
+                      type_arguments: data.type_arguments.filter(notFalsy),
+                      arguments: data.arguments,
+                    }
+                    try {
+                      const gas = await estimateGas(
+                        client,
+                        sender,
+                        payload,
+                        module,
+                      )
+                      const txHash = await txSigner.signAndSubmitTransaction(
+                        payload,
+                        gas,
+                      )
+                      const tx = await client.waitForTransactionWithResult(
+                        txHash,
+                      )
+                      return { tx }
+                    } catch (error) {
+                      return { error, payload }
+                    }
+                  }
+                : undefined
+            }
+          />
+        ))}
     </Section>
   )
 }
-
-const Structs = styled.details`
-  > div {
-    margin-top: 16px;
-    margin-left: 16px;
-    padding: 12px 16px 6px;
-    label {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      input {
-        padding: 4px 8px;
-        width: 50%;
-      }
-    }
-  }
-`
-
-const Functions = styled.details`
-  display: flex;
-  flex-direction: column;
-  row-gap: 8px;
-  > div {
-    margin-top: 8px;
-    :last-child {
-      margin-bottom: 16px;
-    }
-  }
-`

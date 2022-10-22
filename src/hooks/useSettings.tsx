@@ -26,6 +26,7 @@ type SettingsContextInterface = {
   aptosAccount?: {
     signer: (client: AptosClient) => Signer
     address: string
+    publicKey: string
   }
   setAptosAccount: (privateKeyHex: Types.HexEncodedBytes | undefined) => void
 }
@@ -54,6 +55,7 @@ export const SettingsContextProvider: FC<{ children: ReactNode }> = ({
       const address = account.address().toString()
       _setAptosAccount({
         address,
+        publicKey: account.pubKey().toString(),
         signer: (client) => createSigner(client, account),
       })
     },
